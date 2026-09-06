@@ -1,0 +1,25 @@
+# ClarityAI Root Gitignore
+
+# Node & Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/dist-ssr/
+frontend/.env
+frontend/.env.*
+!frontend/.env.example
+
+# Python & Backend
+backend/venv/
+backend/.env
+backend/.env.*
+!backend/.env.example
+backend/db.sqlite3
+backend/**/__pycache__/
+backend/**/*.pyc
+
+# OS / Editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.log
