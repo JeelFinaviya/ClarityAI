@@ -1,21 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
-  Check, 
-  ArrowLeft, 
   Sparkles, 
-  ShieldCheck, 
+  ArrowLeft, 
+  ArrowRight, 
   AlertCircle, 
-  RefreshCw, 
-  ArrowRight,
-  Zap,
-  Activity,
-  Layers,
-  BrainCircuit,
-  Compass
+  RotateCcw, 
+  CheckCircle2, 
+  Zap, 
+  ShieldCheck, 
+  Layers
 } from 'lucide-react';
-import { analyzeExplanation, synthesizeFinalDiagnostic } from '../services/api';
+import { analyzeExplanation, synthesizeFinalDiagnostic, saveDiagnosticRecord } from '../services/api';
 import { DiagnosticProbePage } from './DiagnosticProbePage';
 import { ResultsView } from '../components/ResultsView';
+
+const SCANNER_STEPS = [
+  { label: 'Parsing Mental Model', desc: 'Extracting key causal assertions and definitions...' },
+  { label: 'Analyzing Causal Mechanics', desc: 'Evaluating step-by-step invariant transformations...' },
+  { label: 'Scanning for Misconceptions', desc: 'Checking common conceptual traps and boundary fallacies...' },
+  { label: 'Calibrating Conviction Index', desc: 'Comparing stated confidence vs demonstrated mechanical depth...' },
+];
 
 export function AnalysisReadyPage({
   topic,
@@ -24,19 +28,30 @@ export function AnalysisReadyPage({
   onEdit,
   onReset,
 }) {
-  // Mode: 'ready' | 'loading_initial' | 'probe' | 'loading_synthesis' | 'results'
   const [mode, setMode] = useState('ready');
   const [error, setError] = useState(null);
   const [initialData, setInitialData] = useState(null);
   const [finalResult, setFinalResult] = useState(null);
+  const [activeStepIdx, setActiveStepIdx] = useState(0);
 
   const wordCount = explanation.trim() ? explanation.trim().split(/\s+/).length : 0;
-  const charCount = explanation.length;
+
+  // Auto-cycle diagnostic scanning animation
+  useEffect(() => {
+    if (mode !== 'loading_initial' && mode !== 'loading_synthesis') return;
+
+    const interval = setInterval(() => {
+      setActiveStepIdx((prev) => (prev < SCANNER_STEPS.length - 1 ? prev + 1 : prev));
+    }, 1200);
+
+    return () => clearInterval(interval);
+  }, [mode]);
 
   const handleInitialAnalyze = async () => {
     if (mode === 'loading_initial' || mode === 'loading_synthesis') return;
     setMode('loading_initial');
     setError(null);
+    setActiveStepIdx(0);
 
     try {
       const data = await analyzeExplanation(topic, explanation, confidence);
@@ -50,7 +65,7 @@ export function AnalysisReadyPage({
       }
     } catch (err) {
       console.error('Initial analysis error:', err);
-      setError(err.message || 'An unexpected error occurred during initial conceptual diagnosis.');
+      setError(err.message || 'Unable to complete diagnosis. Please verify your connection or retry.');
       setMode('ready');
     }
   };
@@ -59,20 +74,21 @@ export function AnalysisReadyPage({
     if (mode === 'loading_synthesis') return;
     setMode('loading_synthesis');
     setError(null);
+    setActiveStepIdx(0);
 
     try {
       const synthesized = await synthesizeFinalDiagnostic({
         topic,
         initial_explanation: explanation,
         confidence,
-        probe_question: initialData.probe.probe_question,
+        probe_question: initialData?.probe?.probe_question || '',
         probe_answer: probeAnswer,
       });
       setFinalResult(synthesized);
       setMode('results');
     } catch (err) {
       console.error('Final synthesis error:', err);
-      setError(err.message || 'Failed to synthesize final diagnostic from your follow-up answer.');
+      setError(err.message || 'Unable to synthesize final score.');
       setMode('probe');
     }
   };
@@ -81,257 +97,173 @@ export function AnalysisReadyPage({
     if (initialData) {
       setFinalResult(initialData);
       setMode('results');
+      if (!initialData.saved_record_id) {
+        saveDiagnosticRecord({
+          topic,
+          initial_explanation: explanation,
+          confidence,
+          diagnostic_result: initialData,
+        }).catch((e) => console.warn('Auto-archive notice:', e));
+      }
     }
   };
 
-  // If in results mode, render ResultsView
+  // 1. Results View
   if (mode === 'results' && finalResult) {
     return (
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 py-12">
-        <ResultsView
-          result={finalResult}
-          userConfidence={confidence}
-          onRefine={onEdit}
-          onReset={onReset}
-        />
+      <ResultsView
+        result={finalResult}
+        userConfidence={confidence}
+        onRefine={onEdit}
+        onReset={onReset}
+      />
+    );
+  }
+
+  // 2. Probe Challenge View
+  if (mode === 'probe' && initialData?.probe) {
+    return (
+      <DiagnosticProbePage
+        topic={topic}
+        probeQuestion={initialData.probe.probe_question}
+        probeReason={initialData.probe.probe_reason}
+        onAnswerSubmit={handleProbeAnswerSubmit}
+        onSkip={handleSkipProbe}
+      />
+    );
+  }
+
+  // 3. Loading Telemetry View
+  if (mode === 'loading_initial' || mode === 'loading_synthesis') {
+    return (
+      <div className="w-full flex-1 flex flex-col items-center justify-center arena-bg-radial px-4 py-16 text-center">
+        <div className="w-full max-w-lg glass-card rounded-3xl p-8 sm:p-10 border border-indigo-500/30 shadow-2xl flex flex-col items-center">
+          
+          {/* Animated Glowing Ring */}
+          <div className="relative w-20 h-20 mb-6 flex items-center justify-center">
+            <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-indigo-500 via-purple-500 to-cyan-400 animate-spin blur-sm opacity-70" />
+            <div className="relative w-16 h-16 rounded-full bg-slate-950 flex items-center justify-center border border-white/10">
+              <Sparkles className="w-8 h-8 text-cyan-400 animate-pulse" />
+            </div>
+          </div>
+
+          <h2 className="font-display text-2xl font-bold text-white mb-2">
+            {mode === 'loading_initial' ? 'Evaluating Mental Model...' : 'Synthesizing Final Rank...'}
+          </h2>
+          <p className="text-xs text-slate-400 mb-8 max-w-xs">
+            Running conceptual causality algorithms on your submission.
+          </p>
+
+          {/* Stepper progress */}
+          <div className="w-full flex flex-col gap-3">
+            {SCANNER_STEPS.map((step, idx) => {
+              const isDone = idx < activeStepIdx;
+              const isCurrent = idx === activeStepIdx;
+              return (
+                <div
+                  key={step.label}
+                  className={`flex items-center gap-3 p-3 rounded-xl border text-left transition-all ${
+                    isCurrent
+                      ? 'bg-indigo-600/20 border-indigo-500 text-white shadow-md'
+                      : isDone
+                      ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300'
+                      : 'bg-slate-900/40 border-white/5 text-slate-500'
+                  }`}
+                >
+                  <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shrink-0 ${
+                    isDone ? 'bg-emerald-500 text-slate-950' : isCurrent ? 'bg-indigo-500 text-white animate-pulse' : 'bg-slate-800 text-slate-600'
+                  }`}>
+                    {isDone ? '✓' : idx + 1}
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-xs font-bold leading-none">{step.label}</span>
+                    <span className="text-[10px] text-slate-400 mt-1">{step.desc}</span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+        </div>
       </div>
     );
   }
 
-  // If in interactive probe mode
-  if (mode === 'probe' && initialData) {
-    return (
-      <div>
+  // 4. Ready / Launch Screen
+  return (
+    <div className="w-full flex-1 flex flex-col items-center justify-start arena-bg-radial px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+      <div className="w-full max-w-3xl flex flex-col gap-6">
+        
+        {/* Header */}
+        <div className="text-center">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs font-semibold mb-3">
+            <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+            <span>Ready for Evaluation</span>
+          </div>
+          <h1 className="font-display text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+            Review & Start Evaluation
+          </h1>
+          <p className="text-slate-400 text-sm mt-2 max-w-md mx-auto">
+            Your argument and stated conviction are locked in. Start the evaluation to calculate your score.
+          </p>
+        </div>
+
         {error && (
-          <div className="max-w-3xl mx-auto px-4 sm:px-6 pt-6">
-            <div className="p-4 rounded-2xl bg-red-500/10 border border-red-500/30 text-left space-y-1">
-              <div className="flex items-center gap-2 text-sm font-semibold text-red-400 font-mono">
-                <AlertCircle className="w-4 h-4 flex-shrink-0" />
-                <span>Synthesis Error</span>
-              </div>
-              <p className="text-xs text-neutral-300 leading-relaxed pl-6">
-                {error}
-              </p>
-            </div>
+          <div className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs flex items-center gap-3">
+            <AlertCircle className="w-5 h-5 text-rose-400 shrink-0" />
+            <span>{error}</span>
           </div>
         )}
 
-        <DiagnosticProbePage
-          topic={topic}
-          probeQuestion={initialData.probe.probe_question}
-          probeReason={initialData.probe.probe_reason}
-          onAnswerSubmit={handleProbeAnswerSubmit}
-          onSkip={handleSkipProbe}
-          onReset={onReset}
-        />
-      </div>
-    );
-  }
-
-  // Loading Initial Diagnostic State: Multi-stage visualizer
-  if (mode === 'loading_initial') {
-    return (
-      <div className="max-w-xl mx-auto px-4 sm:px-6 py-20 text-center animate-fadeIn">
-        <div className="p-8 sm:p-10 rounded-3xl bg-neutral-900/90 border border-amber-500/25 shadow-2xl backdrop-blur-2xl space-y-7">
-          {/* Animated Center Radar */}
-          <div className="relative flex items-center justify-center">
-            <div className="w-16 h-16 rounded-2xl bg-amber-400/10 border border-amber-400/30 flex items-center justify-center text-amber-400 shadow-[0_0_25px_rgba(245,158,11,0.25)]">
-              <BrainCircuit className="w-8 h-8 animate-pulse" />
+        {/* Summary Card */}
+        <div className="glass-card rounded-2xl p-6 sm:p-8 flex flex-col gap-6 border border-white/10 shadow-2xl">
+          
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="p-4 rounded-xl bg-slate-900/80 border border-white/5">
+              <span className="text-xs text-slate-400 uppercase tracking-wider font-semibold block mb-1">Target Concept</span>
+              <span className="font-display text-lg font-bold text-white">{topic}</span>
             </div>
-            <div className="absolute -inset-3 rounded-3xl bg-amber-400/10 blur-xl -z-10 animate-pulse" />
+
+            <div className="p-4 rounded-xl bg-slate-900/80 border border-white/5">
+              <span className="text-xs text-slate-400 uppercase tracking-wider font-semibold block mb-1">Stated Conviction</span>
+              <span className="font-display text-lg font-bold text-indigo-400 font-mono-code">{confidence}%</span>
+            </div>
           </div>
 
-          <div className="space-y-2">
-            <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white font-sans">
-              Diagnosing Conceptual Model
-            </h2>
-            <p className="text-xs sm:text-sm text-neutral-400 max-w-sm mx-auto font-sans">
-              Investigating "{topic}" across definition accuracy, causal depth, and boundary invariants.
+          <div className="p-5 rounded-xl bg-slate-900/80 border border-white/5 flex flex-col gap-2">
+            <div className="flex items-center justify-between text-xs text-slate-400">
+              <span className="font-semibold uppercase tracking-wider">Your Articulated Argument</span>
+              <span className="font-mono-code">{wordCount} words</span>
+            </div>
+            <p className="text-sm text-slate-300 leading-relaxed max-h-48 overflow-y-auto pr-2">
+              "{explanation}"
             </p>
           </div>
 
-          {/* Sequential Cognitive Pipeline Stages */}
-          <div className="space-y-2.5 text-left pt-2 border-t border-white/[0.08]">
-            <div className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.05] flex items-center justify-between text-xs font-mono">
-              <div className="flex items-center gap-2.5 text-neutral-300">
-                <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
-                <span>1. Evaluating Causal Depth & Mechanics</span>
-              </div>
-              <span className="text-amber-400 font-semibold text-[10px]">ACTIVE</span>
-            </div>
-
-            <div className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.05] flex items-center justify-between text-xs font-mono">
-              <div className="flex items-center gap-2.5 text-neutral-400">
-                <span className="w-2 h-2 rounded-full bg-neutral-600"></span>
-                <span>2. Testing Invariant Constraints</span>
-              </div>
-              <span className="text-neutral-500 text-[10px]">QUEUED</span>
-            </div>
-
-            <div className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.05] flex items-center justify-between text-xs font-mono">
-              <div className="flex items-center gap-2.5 text-neutral-400">
-                <span className="w-2 h-2 rounded-full bg-neutral-600"></span>
-                <span>3. Formulating Targeted Probe</span>
-              </div>
-              <span className="text-neutral-500 text-[10px]">QUEUED</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // Loading Synthesis Diagnostic State
-  if (mode === 'loading_synthesis') {
-    return (
-      <div className="max-w-xl mx-auto px-4 sm:px-6 py-20 text-center animate-fadeIn">
-        <div className="p-8 sm:p-10 rounded-3xl bg-neutral-900/90 border border-amber-500/35 shadow-2xl backdrop-blur-2xl space-y-7">
-          <div className="relative flex items-center justify-center">
-            <div className="w-16 h-16 rounded-2xl bg-amber-500/15 border border-amber-500/40 flex items-center justify-center text-amber-400 shadow-[0_0_25px_rgba(245,158,11,0.3)]">
-              <Zap className="w-8 h-8 animate-bounce" style={{ animationDuration: '1.2s' }} />
-            </div>
-            <div className="absolute -inset-3 rounded-3xl bg-amber-500/20 blur-xl -z-10 animate-pulse" />
-          </div>
-
-          <div className="space-y-2">
-            <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white font-sans">
-              Synthesizing Dual Diagnostic
-            </h2>
-            <p className="text-xs sm:text-sm text-neutral-400 max-w-sm mx-auto font-sans">
-              Harmonizing your initial articulation with the follow-up probe response.
-            </p>
-          </div>
-
-          <div className="p-3.5 rounded-xl bg-amber-500/[0.05] border border-amber-500/20 text-xs font-mono text-amber-300 flex items-center justify-center gap-2">
-            <Activity className="w-4 h-4 animate-spin" />
-            <span>Calibrating Epistemic Confidence vs Verified Mechanics</span>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // Analysis Ready State
-  return (
-    <div className="max-w-2xl mx-auto px-4 sm:px-6 py-12 animate-fadeIn text-left">
-      {/* Top Breadcrumb & Step */}
-      <div className="flex items-center justify-between mb-8">
-        <button
-          onClick={onEdit}
-          type="button"
-          className="inline-flex items-center gap-2 text-xs font-medium text-neutral-400 hover:text-white transition-colors cursor-pointer"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          <span>Edit Articulation</span>
-        </button>
-        <span className="text-xs font-mono text-amber-400 tracking-wider uppercase flex items-center gap-1.5">
-          <span className="w-1.5 h-1.5 rounded-full bg-amber-400 shadow-[0_0_6px_rgba(245,158,11,0.8)]"></span>
-          Step 3 &bull; Diagnostic Dispatch
-        </span>
-      </div>
-
-      {/* Main Heading & Text */}
-      <div className="mb-8">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-mono mb-4">
-          <ShieldCheck className="w-3.5 h-3.5" />
-          <span>Session Payload Validated</span>
-        </div>
-        <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white mb-3 font-sans">
-          Ready for diagnostic.
-        </h1>
-        <p className="text-sm sm:text-base text-neutral-400 font-normal leading-relaxed">
-          ClarityAI will evaluate your causal mental model. If key operational mechanisms are missing, you will receive a targeted inquiry.
-        </p>
-      </div>
-
-      {/* Error Banner if API failed */}
-      {error && (
-        <div className="mb-6 p-4 rounded-2xl bg-red-500/10 border border-red-500/30 text-left space-y-2">
-          <div className="flex items-center gap-2 text-sm font-semibold text-red-400 font-mono">
-            <AlertCircle className="w-4 h-4 flex-shrink-0" />
-            <span>Analysis Request Failed</span>
-          </div>
-          <p className="text-xs text-neutral-300 leading-relaxed pl-6">
-            {error}
-          </p>
-          <div className="pt-2 pl-6 flex items-center gap-3">
+          {/* Action Row */}
+          <div className="flex items-center justify-between pt-4 border-t border-white/5">
             <button
-              onClick={handleInitialAnalyze}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-500/20 hover:bg-red-500/30 border border-red-500/40 text-xs text-red-200 font-medium transition-colors cursor-pointer font-mono"
+              type="button"
+              onClick={onEdit}
+              className="px-4 py-2.5 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 text-slate-300 text-xs font-semibold transition-all cursor-pointer"
             >
-              <RefreshCw className="w-3.5 h-3.5" />
-              <span>Retry Diagnostic</span>
+              ← Edit Details
+            </button>
+
+            <button
+              type="button"
+              onClick={handleInitialAnalyze}
+              className="px-8 py-3.5 rounded-xl bg-gradient-to-r from-indigo-600 via-purple-600 to-cyan-500 text-white font-display text-sm font-bold shadow-xl shadow-indigo-500/30 hover:scale-105 active:scale-95 transition-all flex items-center gap-2 cursor-pointer"
+            >
+              <Sparkles className="w-4 h-4 text-cyan-200" />
+              <span>Start Evaluation</span>
+              <ArrowRight className="w-4 h-4" />
             </button>
           </div>
-        </div>
-      )}
 
-      {/* Captured Summary Card */}
-      <div className="p-6 sm:p-7 rounded-3xl bg-neutral-900/80 border border-white/[0.08] shadow-2xl space-y-5 mb-8 backdrop-blur-xl">
-        <div className="text-[11px] font-mono text-neutral-400 uppercase tracking-wider">
-          Diagnostic Session Parameters
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {/* Topic */}
-          <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/[0.05] space-y-1">
-            <span className="text-[10px] text-neutral-400 font-mono uppercase tracking-wider">Subject</span>
-            <div className="text-base font-semibold text-white truncate font-sans" title={topic}>
-              {topic || 'None specified'}
-            </div>
-          </div>
-
-          {/* Confidence */}
-          <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/[0.05] space-y-1">
-            <span className="text-[10px] text-neutral-400 font-mono uppercase tracking-wider">Self-Assessed Confidence</span>
-            <div className="text-base font-semibold text-amber-400 font-mono flex items-baseline gap-1">
-              <span>{confidence}%</span>
-              <span className="text-xs text-neutral-400 font-sans">
-                {confidence >= 75 ? '(High)' : confidence >= 50 ? '(Moderate)' : '(Low)'}
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* Payload Metrics */}
-        <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/[0.05] flex items-center justify-between text-xs font-mono text-neutral-400">
-          <span>Payload: {charCount} chars ({wordCount} words)</span>
-          <span className="text-emerald-400 flex items-center gap-1">
-            <Check className="w-3.5 h-3.5" /> Client Verified
-          </span>
-        </div>
-      </div>
-
-      {/* Primary Action Button */}
-      <div className="space-y-4">
-        <button
-          id="analyze-btn"
-          onClick={handleInitialAnalyze}
-          className="w-full group relative inline-flex items-center justify-center gap-3 px-8 py-4 rounded-xl bg-amber-400 hover:bg-amber-300 text-neutral-950 font-semibold text-base transition-all duration-200 shadow-xl shadow-amber-500/20 hover:shadow-amber-500/30 hover:scale-[1.01] active:scale-[0.99] cursor-pointer font-sans"
-        >
-          <Sparkles className="w-5 h-5 text-neutral-950" />
-          <span>Launch AI Conceptual Diagnostic</span>
-          <ArrowRight className="w-5 h-5 transition-transform duration-200 group-hover:translate-x-1" />
-        </button>
-
-        <div className="flex items-center justify-between pt-2">
-          <button
-            onClick={onEdit}
-            type="button"
-            className="text-xs text-neutral-400 hover:text-white transition-colors cursor-pointer font-mono"
-          >
-            Edit Articulation
-          </button>
-          <button
-            onClick={onReset}
-            type="button"
-            className="text-xs text-neutral-400 hover:text-white transition-colors cursor-pointer font-mono"
-          >
-            Cancel Session
-          </button>
-        </div>
       </div>
     </div>
   );
 }
-

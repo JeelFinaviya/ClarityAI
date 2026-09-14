@@ -1,81 +1,100 @@
 import React from 'react';
-import { RotateCcw } from 'lucide-react';
+import { Sparkles, Trophy, RotateCcw, BrainCircuit, History, Zap } from 'lucide-react';
 
-export function Header({ currentStep, onReset }) {
+export function Header({ currentStep, onReset, onNavigateArchive }) {
   const steps = [
-    { id: 'explain', label: '1. Articulation' },
-    { id: 'confidence', label: '2. Calibration' },
-    { id: 'ready', label: '3. Diagnostic' },
+    { id: 'explain', label: '1. Articulate', icon: BrainCircuit },
+    { id: 'confidence', label: '2. Conviction', icon: Zap },
+    { id: 'ready', label: '3. Evaluation', icon: Trophy },
   ];
 
+  const isSessionActive = ['explain', 'confidence', 'ready'].includes(currentStep);
+
   return (
-    <header className="w-full border-b border-white/[0.06] bg-[#07080b]/80 backdrop-blur-xl sticky top-0 z-50">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-        {/* Brand */}
+    <header className="w-full border-b border-white/10 bg-[#090d16]/80 backdrop-blur-xl sticky top-0 z-50 transition-all">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+        
+        {/* Brand Logo */}
         <div 
           onClick={onReset}
-          className="flex items-center gap-3 cursor-pointer group transition-opacity hover:opacity-90"
+          className="cursor-pointer group flex items-center gap-3 select-none"
+          title="Return to Home"
         >
-          <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-amber-400 via-amber-500 to-amber-600 flex items-center justify-center text-neutral-950 font-black text-sm shadow-md shadow-amber-500/25 group-hover:scale-105 transition-transform duration-200">
-            C
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 via-purple-500 to-cyan-400 p-[1px] shadow-lg shadow-indigo-500/20 group-hover:shadow-indigo-500/40 group-hover:scale-105 transition-all">
+            <div className="w-full h-full bg-[#0b0f19] rounded-[11px] flex items-center justify-center">
+              <Sparkles className="w-4 h-4 text-cyan-400 group-hover:text-indigo-300 transition-colors" />
+            </div>
           </div>
+
           <div className="flex flex-col">
             <div className="flex items-center gap-1.5">
-              <span className="font-bold text-base tracking-tight text-white font-sans">Clarity<span className="text-amber-400 font-extrabold">AI</span></span>
+              <span className="font-display text-lg font-bold tracking-tight text-white group-hover:text-cyan-300 transition-colors">
+                Clarity<span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-cyan-400">AI</span>
+              </span>
             </div>
-            <span className="text-[9px] uppercase tracking-widest text-neutral-400 font-mono -mt-1 font-semibold">
-              Cognitive Diagnostic
+            <span className="text-[11px] text-slate-400 hidden sm:block font-medium">
+              Conceptual Understanding Platform
             </span>
           </div>
         </div>
 
-        {/* Step Indicator (Visible only during session) */}
-        {currentStep !== 'landing' && (
-          <div className="hidden sm:flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-white/[0.02] border border-white/[0.08] backdrop-blur-md">
-            {steps.map((s, idx) => {
-              const isActive = currentStep === s.id;
-              const isPassed = 
-                (currentStep === 'confidence' && s.id === 'explain') ||
-                (currentStep === 'ready' && (s.id === 'explain' || s.id === 'confidence'));
+        {/* Step Progression Bar */}
+        {isSessionActive && (
+          <nav aria-label="Progression" className="hidden md:flex items-center gap-2 lg:gap-4 bg-slate-900/60 p-1.5 px-3 rounded-full border border-white/5">
+            {steps.map((st, idx) => {
+              const StepIcon = st.icon;
+              const isActive = currentStep === st.id;
+              const isPast = 
+                (currentStep === 'confidence' && st.id === 'explain') ||
+                (currentStep === 'ready' && (st.id === 'explain' || st.id === 'confidence'));
 
               return (
-                <div key={s.id} className="flex items-center gap-2.5">
-                  <span
-                    className={`text-xs transition-colors font-mono ${
-                      isActive
-                        ? 'text-amber-400 font-semibold drop-shadow-[0_0_8px_rgba(245,158,11,0.4)]'
-                        : isPassed
-                        ? 'text-neutral-300'
-                        : 'text-neutral-400'
-                    }`}
-                  >
-                    {s.label}
-                  </span>
+                <div key={st.id} className="flex items-center gap-2">
+                  <div className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold transition-all ${
+                    isActive
+                      ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-md shadow-indigo-500/25 scale-105'
+                      : isPast
+                      ? 'text-emerald-400 bg-emerald-500/10 border border-emerald-500/20'
+                      : 'text-slate-500 hover:text-slate-400'
+                  }`}>
+                    <StepIcon className="w-3.5 h-3.5" />
+                    <span>{st.label}</span>
+                  </div>
                   {idx < steps.length - 1 && (
-                    <span className="text-neutral-700 text-xs font-mono">/</span>
+                    <span className="text-slate-700 text-xs">➔</span>
                   )}
                 </div>
               );
             })}
-          </div>
+          </nav>
         )}
 
-        {/* Reset / Action */}
-        <div className="flex items-center gap-3">
-          {currentStep !== 'landing' ? (
+        {/* Right Navigation & Quick Action Buttons */}
+        <div className="flex items-center gap-2 sm:gap-3">
+          <button
+            type="button"
+            onClick={onNavigateArchive}
+            className={`text-xs font-medium flex items-center gap-2 py-2 px-3.5 rounded-xl border transition-all cursor-pointer ${
+              currentStep === 'archive'
+                ? 'bg-indigo-600 text-white border-indigo-500 shadow-lg shadow-indigo-500/25 font-semibold'
+                : 'bg-slate-900/80 hover:bg-slate-800/80 text-slate-300 hover:text-white border-white/10 hover:border-white/20'
+            }`}
+          >
+            <History className="w-4 h-4 text-cyan-400" />
+            <span className="hidden sm:inline">History Log</span>
+            <span className="sm:hidden">History</span>
+          </button>
+
+          {isSessionActive && (
             <button
+              type="button"
               onClick={onReset}
-              className="flex items-center gap-1.5 text-xs text-neutral-400 hover:text-white px-3 py-1.5 rounded-lg border border-white/[0.08] hover:border-white/20 hover:bg-white/[0.04] transition-all cursor-pointer font-medium"
-              title="Start over"
+              className="text-xs font-medium text-slate-300 hover:text-white bg-slate-900/80 hover:bg-slate-800/80 border border-white/10 hover:border-white/20 transition-all flex items-center gap-1.5 py-2 px-3 rounded-xl cursor-pointer active:scale-95"
+              title="Start a new session"
             >
-              <RotateCcw className="w-3.5 h-3.5" />
-              <span>Reset</span>
+              <RotateCcw className="w-3.5 h-3.5 text-amber-400" />
+              <span className="hidden sm:inline">New Topic</span>
             </button>
-          ) : (
-            <div className="flex items-center gap-2 text-xs text-neutral-400 font-mono px-3 py-1 rounded-full bg-white/[0.02] border border-white/[0.06]">
-              <span className="inline-block w-1.5 h-1.5 rounded-full bg-amber-400 shadow-[0_0_6px_rgba(245,158,11,0.8)]"></span>
-              <span className="text-neutral-300">Phase 4 Active</span>
-            </div>
           )}
         </div>
       </div>

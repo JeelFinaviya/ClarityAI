@@ -1,129 +1,231 @@
 import React from 'react';
-import { ArrowRight, Sparkles, BrainCircuit, Target, ShieldCheck } from 'lucide-react';
-
-const SUGGESTED_TOPICS = [
-  'Binary Search',
-  'React Virtual DOM',
-  'Transformer Self-Attention',
-  'Distributed Consensus (Raft)',
-  'Photosynthesis',
-  'TCP Handshake',
-];
+import { 
+  Sparkles, 
+  BrainCircuit, 
+  Trophy, 
+  Zap, 
+  ShieldCheck, 
+  ArrowRight, 
+  Layers, 
+  Target, 
+  Code2, 
+  Cpu, 
+  Database, 
+  Network,
+  BookOpen
+} from 'lucide-react';
 
 export function LandingPage({ onStart, onSelectTopic }) {
-  const handleTopicClick = (selectedTopic) => {
-    if (onSelectTopic) {
-      onSelectTopic(selectedTopic);
-    } else {
-      onStart();
+  const popularTopics = [
+    {
+      title: 'React Virtual DOM',
+      category: 'Frontend',
+      icon: Code2,
+      difficulty: 'Medium',
+      color: 'from-cyan-500 to-blue-500',
+      badge: 'Popular',
+      desc: 'Diffing algorithms, reconciliation, and batched browser reflows.'
+    },
+    {
+      title: 'JavaScript Event Loop',
+      category: 'Runtime',
+      icon: Cpu,
+      difficulty: 'Hard',
+      color: 'from-amber-500 to-orange-500',
+      badge: 'Core Concept',
+      desc: 'Call stack, Web APIs, Microtasks vs Macrotasks execution.'
+    },
+    {
+      title: 'Database B-Tree Indexing',
+      category: 'Databases',
+      icon: Database,
+      difficulty: 'Hard',
+      color: 'from-emerald-500 to-teal-500',
+      badge: 'Essential',
+      desc: 'Disk I/O minimization, logarithmic traversal, and leaf node links.'
+    },
+    {
+      title: 'CAP Theorem',
+      category: 'Distributed',
+      icon: Network,
+      difficulty: 'Medium',
+      color: 'from-purple-500 to-indigo-500',
+      badge: 'Classic',
+      desc: 'Consistency vs Availability trade-offs during network partitions.'
+    },
+    {
+      title: 'Transformer Self-Attention',
+      category: 'Deep Learning',
+      icon: BookOpen,
+      difficulty: 'Advanced',
+      color: 'from-pink-500 to-rose-500',
+      badge: 'Key Architecture',
+      desc: 'Query, Key, Value vectors and scaled dot-product matrix multiplication.'
+    },
+    {
+      title: 'TCP vs UDP',
+      category: 'Networking',
+      icon: Layers,
+      difficulty: 'Easy',
+      color: 'from-blue-500 to-indigo-500',
+      badge: 'Fundamentals',
+      desc: '3-way handshake, packet loss recovery, and connection overhead.'
     }
-  };
+  ];
+
+  const masteryTiers = [
+    { rank: '👑 First-Principles Mastery', score: '89–100%', desc: 'Deep causal mechanics & edge case mastery.' },
+    { rank: '⚔️ Mechanics Specialist', score: '71–88%', desc: 'Clear working knowledge with step-by-step logic.' },
+    { rank: '🛡️ Concept Explorer', score: '46–70%', desc: 'Understands basics but relies on high-level analogies.' },
+    { rank: '🔍 Surface Familiarity', score: '0–45%', desc: 'Definitions and buzzwords without operational mechanisms.' }
+  ];
 
   return (
-    <div className="relative flex flex-col items-center justify-center min-h-[calc(100vh-4.5rem)] px-4 sm:px-6 py-16 overflow-hidden animate-fadeIn">
-      {/* Ambient background light gradients */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[380px] bg-amber-500/[0.05] rounded-full blur-[140px] pointer-events-none" />
-      <div className="absolute bottom-10 left-1/2 -translate-x-1/2 w-[700px] h-[240px] bg-indigo-500/[0.03] rounded-full blur-[160px] pointer-events-none" />
+    <div className="w-full flex-1 flex flex-col items-center justify-start arena-bg-radial px-4 sm:px-6 lg:px-8 py-10 sm:py-16">
+      
+      {/* Hero Badge */}
+      <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 text-xs font-semibold mb-6 animate-float shadow-lg shadow-indigo-500/10">
+        <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
+        <span>Understanding Intelligence Platform</span>
+      </div>
 
-      <div className="relative z-10 max-w-3xl mx-auto text-center flex flex-col items-center">
-        {/* Intelligence Pill */}
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/[0.03] border border-white/[0.08] text-xs font-mono text-neutral-300 mb-8 backdrop-blur-md">
-          <span className="w-2 h-2 rounded-full bg-amber-400 shadow-[0_0_8px_rgba(245,158,11,0.8)]"></span>
-          <span className="tracking-wide">AI Conceptual Understanding Diagnostic</span>
-        </div>
-
-        {/* Hero Title */}
-        <h1 className="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-white mb-6 leading-[1.08] font-sans">
-          Do you actually <br className="hidden sm:inline" />
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-amber-400 to-amber-100 drop-shadow-sm">
-            understand it?
-          </span>
+      {/* Main Hero Header */}
+      <div className="text-center max-w-4xl mx-auto mb-10">
+        <h1 className="font-display text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white mb-6 leading-tight">
+          Do you <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-300 to-cyan-400">actually understand</span> it, or just memorized the buzzwords?
         </h1>
-
-        {/* Hero Subtitle */}
-        <p className="text-base sm:text-lg md:text-xl text-neutral-400 max-w-2xl mb-8 leading-relaxed font-normal">
-          Distinguish <span className="text-neutral-200 font-medium">surface familiarity</span> from <span className="text-amber-300 font-medium">genuine mechanical comprehension</span> through interactive cognitive probing.
+        <p className="text-base sm:text-xl text-slate-300 max-w-2xl mx-auto leading-relaxed">
+          Clarity tests your true mechanical grasp from first principles. Explain any concept in your own words, verify your depth against targeted follow-ups, and calibrate your mental models.
         </p>
+      </div>
 
-        {/* Primary CTA */}
-        <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto mb-10">
-          <button
-            id="start-test-btn"
-            onClick={onStart}
-            className="w-full sm:w-auto group relative inline-flex items-center justify-center gap-3 px-9 py-4 rounded-xl bg-amber-400 hover:bg-amber-300 text-neutral-950 font-semibold text-base transition-all duration-200 shadow-xl shadow-amber-500/20 hover:shadow-amber-500/30 hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
-          >
-            <Sparkles className="w-5 h-5 text-neutral-950" />
-            <span>Begin Understanding Diagnostic</span>
-            <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" />
-          </button>
+      {/* Primary CTA Buttons */}
+      <div className="flex flex-col sm:flex-row items-center gap-4 mb-16">
+        <button
+          type="button"
+          onClick={onStart}
+          className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-indigo-600 via-purple-600 to-cyan-500 text-white font-display text-base sm:text-lg font-bold shadow-xl shadow-indigo-500/30 hover:shadow-indigo-500/50 hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-3 cursor-pointer group"
+        >
+          <Sparkles className="w-5 h-5 text-cyan-200 group-hover:rotate-12 transition-transform" />
+          <span>Start Understanding Test</span>
+          <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+        </button>
+      </div>
+
+      {/* Step Walkthrough Cards */}
+      <div className="w-full max-w-5xl mb-20">
+        <div className="text-center mb-8">
+          <h2 className="font-display text-2xl sm:text-3xl font-bold text-white mb-2">How It Works</h2>
+          <p className="text-slate-400 text-sm">A fast, structured process to evaluate and upgrade your conceptual models.</p>
         </div>
 
-        {/* Suggested Topics Bar */}
-        <div className="w-full max-w-2xl flex flex-col items-center space-y-2.5 mb-16">
-          <span className="text-[11px] font-mono text-neutral-400 uppercase tracking-wider">
-            Quick Topic Inspiration
-          </span>
-          <div className="flex flex-wrap justify-center gap-2">
-            {SUGGESTED_TOPICS.map((topicItem) => (
-              <button
-                key={topicItem}
-                type="button"
-                onClick={() => handleTopicClick(topicItem)}
-                className="px-3 py-1.5 rounded-lg bg-white/[0.02] hover:bg-white/[0.06] border border-white/[0.06] hover:border-amber-400/40 text-xs font-mono text-neutral-300 hover:text-amber-300 transition-all cursor-pointer"
-              >
-                {topicItem}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* 3-Phase Cognitive Methodology */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-left w-full max-w-3xl">
-          <div className="p-5 rounded-2xl bg-white/[0.02] border border-white/[0.06] hover:border-white/[0.12] transition-colors group">
-            <div className="w-8 h-8 rounded-xl bg-amber-400/10 text-amber-400 flex items-center justify-center mb-3 group-hover:scale-105 transition-transform">
-              <BrainCircuit className="w-4 h-4" />
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="glass-card rounded-2xl p-5 relative overflow-hidden group hover:border-indigo-500/40 transition-all">
+            <div className="w-10 h-10 rounded-xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center font-bold mb-4">
+              01
             </div>
-            <div className="text-[11px] font-mono text-neutral-400 uppercase tracking-wider mb-1">
-              Phase 1
-            </div>
-            <h3 className="text-sm font-semibold text-white mb-1.5">First-Principles Articulation</h3>
-            <p className="text-xs text-neutral-400 leading-relaxed">
-              Strip away memorized jargon. Articulate the step-by-step causality of the concept in your own words.
-            </p>
+            <h3 className="font-display text-base font-bold text-white mb-1">Articulate</h3>
+            <p className="text-xs text-slate-400 leading-relaxed">Write your mental model in plain English without looking at documentation.</p>
           </div>
 
-          <div className="p-5 rounded-2xl bg-white/[0.02] border border-white/[0.06] hover:border-white/[0.12] transition-colors group">
-            <div className="w-8 h-8 rounded-xl bg-cyan-400/10 text-cyan-400 flex items-center justify-center mb-3 group-hover:scale-105 transition-transform">
-              <Target className="w-4 h-4" />
+          <div className="glass-card rounded-2xl p-5 relative overflow-hidden group hover:border-cyan-500/40 transition-all">
+            <div className="w-10 h-10 rounded-xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center font-bold mb-4">
+              02
             </div>
-            <div className="text-[11px] font-mono text-neutral-400 uppercase tracking-wider mb-1">
-              Phase 2
-            </div>
-            <h3 className="text-sm font-semibold text-white mb-1.5">Targeted Mechanism Probe</h3>
-            <p className="text-xs text-neutral-400 leading-relaxed">
-              ClarityAI isolates the single most critical missing causal link and probes your reasoning dynamically.
-            </p>
+            <h3 className="font-display text-base font-bold text-white mb-1">Set Conviction</h3>
+            <p className="text-xs text-slate-400 leading-relaxed">Rate your confidence to test for blindspots or overconfidence traps.</p>
           </div>
 
-          <div className="p-5 rounded-2xl bg-white/[0.02] border border-white/[0.06] hover:border-white/[0.12] transition-colors group">
-            <div className="w-8 h-8 rounded-xl bg-emerald-400/10 text-emerald-400 flex items-center justify-center mb-3 group-hover:scale-105 transition-transform">
-              <ShieldCheck className="w-4 h-4" />
+          <div className="glass-card rounded-2xl p-5 relative overflow-hidden group hover:border-amber-500/40 transition-all">
+            <div className="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold mb-4">
+              03
             </div>
-            <div className="text-[11px] font-mono text-neutral-400 uppercase tracking-wider mb-1">
-              Phase 3
-            </div>
-            <h3 className="text-sm font-semibold text-white mb-1.5">Calibrated Understanding</h3>
-            <p className="text-xs text-neutral-400 leading-relaxed">
-              Synthesizes both responses to calibrate confidence against demonstrated first-principles mastery.
-            </p>
+            <h3 className="font-display text-base font-bold text-white mb-1">Clarify Mechanism</h3>
+            <p className="text-xs text-slate-400 leading-relaxed">If needed, answer 1 targeted follow-up question to verify exact causality.</p>
           </div>
-        </div>
 
-        {/* Minimal Footer Signature */}
-        <div className="mt-16 text-xs text-neutral-400 font-mono tracking-widest uppercase">
-          ClarityAI &bull; Epistemic Diagnostic Framework
+          <div className="glass-card rounded-2xl p-5 relative overflow-hidden group hover:border-emerald-500/40 transition-all">
+            <div className="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold mb-4">
+              04
+            </div>
+            <h3 className="font-display text-base font-bold text-white mb-1">Mastery Report</h3>
+            <p className="text-xs text-slate-400 leading-relaxed">Receive calibrated scores, misconception breakdowns, and strength insights.</p>
+          </div>
         </div>
       </div>
+
+      {/* Popular Concepts Section */}
+      <div className="w-full max-w-5xl mb-16">
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h2 className="font-display text-xl sm:text-2xl font-bold text-white flex items-center gap-2">
+              <Target className="w-5 h-5 text-indigo-400" />
+              <span>Select a Topic to Test</span>
+            </h2>
+            <p className="text-xs text-slate-400 mt-1">Pick a concept below or enter any custom topic of your choice.</p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {popularTopics.map((topicItem) => {
+            const IconComponent = topicItem.icon;
+            return (
+              <div
+                key={topicItem.title}
+                onClick={() => onSelectTopic(topicItem.title)}
+                className="glass-card glass-card-hover rounded-2xl p-5 cursor-pointer flex flex-col justify-between group"
+              >
+                <div>
+                  <div className="flex items-center justify-between mb-3">
+                    <div className={`w-9 h-9 rounded-xl bg-gradient-to-br ${topicItem.color} flex items-center justify-center text-white shadow-md`}>
+                      <IconComponent className="w-4 h-4" />
+                    </div>
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-white/5 border border-white/10 text-slate-300">
+                      {topicItem.badge}
+                    </span>
+                  </div>
+
+                  <h3 className="font-display text-base font-bold text-white group-hover:text-cyan-300 transition-colors mb-1">
+                    {topicItem.title}
+                  </h3>
+                  <p className="text-xs text-slate-400 leading-relaxed mb-4">
+                    {topicItem.desc}
+                  </p>
+                </div>
+
+                <div className="flex items-center justify-between pt-3 border-t border-white/5 text-xs">
+                  <span className="text-slate-500 font-medium">{topicItem.category}</span>
+                  <span className="text-indigo-400 font-semibold group-hover:translate-x-1 transition-transform flex items-center gap-1">
+                    Test Topic ➔
+                  </span>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Mastery Levels Showcase */}
+      <div className="w-full max-w-5xl glass-card rounded-2xl p-6 sm:p-8">
+        <div className="flex items-center gap-3 mb-6">
+          <Trophy className="w-6 h-6 text-amber-400" />
+          <div>
+            <h3 className="font-display text-lg font-bold text-white">Understanding Levels & Calibration System</h3>
+            <p className="text-xs text-slate-400">How your mental models are evaluated and scored.</p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {masteryTiers.map((item) => (
+            <div key={item.rank} className="bg-slate-900/60 rounded-xl p-4 border border-white/5">
+              <div className="font-display text-sm font-bold text-slate-100 mb-1">{item.rank}</div>
+              <div className="text-xs font-bold text-indigo-400 mb-2 font-mono-code">{item.score}</div>
+              <div className="text-xs text-slate-400 leading-relaxed">{item.desc}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
     </div>
   );
 }

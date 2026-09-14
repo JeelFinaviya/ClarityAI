@@ -270,16 +270,15 @@ def _get_api_key() -> str:
 
 def _get_candidate_models() -> list[str]:
     """Returns preferred model list with reliable fallbacks."""
-    configured = os.getenv('GEMINI_MODEL') or getattr(settings, 'GEMINI_MODEL', 'gemini-3.6-flash')
+    configured = os.getenv('GEMINI_MODEL') or getattr(settings, 'GEMINI_MODEL', 'gemini-2.5-flash')
     configured = configured.strip("'\" \t\n\r")
-    if configured in ('gemini-2.5-flash', 'gemini-1.5-flash', 'gemini-2.0-flash'):
-        configured = 'gemini-3.6-flash'
 
     models = [configured]
-    for fallback in ['gemini-3.6-flash', 'gemini-3.7-flash', 'gemini-3.5-flash']:
+    for fallback in ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-1.5-flash']:
         if fallback not in models:
             models.append(fallback)
     return models
+
 
 
 class GeminiAnalysisService:

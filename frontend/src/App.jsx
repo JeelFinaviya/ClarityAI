@@ -4,12 +4,13 @@ import { LandingPage } from './pages/LandingPage';
 import { ExplainPage } from './pages/ExplainPage';
 import { ConfidencePage } from './pages/ConfidencePage';
 import { AnalysisReadyPage } from './pages/AnalysisReadyPage';
+import { ArchivePage } from './pages/ArchivePage';
 
 export default function App() {
-  // Step state: 'landing' | 'explain' | 'confidence' | 'ready'
+  // Step state: 'landing' | 'explain' | 'confidence' | 'ready' | 'archive'
   const [step, setStep] = useState(() => {
     const hash = window.location.hash.replace('#', '');
-    if (['landing', 'explain', 'confidence', 'ready'].includes(hash)) {
+    if (['landing', 'explain', 'confidence', 'ready', 'archive'].includes(hash)) {
       return hash;
     }
     return 'landing';
@@ -18,13 +19,13 @@ export default function App() {
   // Understanding data state (persists across navigation)
   const [topic, setTopic] = useState('');
   const [explanation, setExplanation] = useState('');
-  const [confidence, setConfidence] = useState(65);
+  const [confidence, setConfidence] = useState(75);
 
   // Sync hash with browser history
   useEffect(() => {
     const handlePopState = () => {
       const hash = window.location.hash.replace('#', '');
-      if (['landing', 'explain', 'confidence', 'ready'].includes(hash)) {
+      if (['landing', 'explain', 'confidence', 'ready', 'archive'].includes(hash)) {
         setStep(hash);
       } else {
         setStep('landing');
@@ -65,14 +66,25 @@ export default function App() {
   const handleReset = () => {
     setTopic('');
     setExplanation('');
-    setConfidence(65);
+    setConfidence(75);
     navigateTo('landing');
   };
 
+  const handleStartNewFromArchive = () => {
+    setTopic('');
+    setExplanation('');
+    setConfidence(75);
+    navigateTo('explain');
+  };
+
   return (
-    <div className="min-h-screen flex flex-col bg-[#07080b] text-neutral-100 bg-grid-subtle">
-      {/* Top Header */}
-      <Header currentStep={step} onReset={handleReset} />
+    <div className="min-h-screen flex flex-col bg-[#090d16] arena-bg-radial text-[#f1f5f9] font-sans selection:bg-indigo-500/30 selection:text-indigo-200">
+      {/* Header */}
+      <Header
+        currentStep={step}
+        onReset={handleReset}
+        onNavigateArchive={() => navigateTo('archive')}
+      />
 
       {/* Main Content Area */}
       <main className="flex-1 flex flex-col">
@@ -110,18 +122,26 @@ export default function App() {
             onReset={handleReset}
           />
         )}
+
+        {step === 'archive' && (
+          <ArchivePage
+            onStartNew={handleStartNewFromArchive}
+            onSelectTopic={handleSelectTopic}
+          />
+        )}
       </main>
 
-      {/* Subtle Minimalist Footer */}
-      <footer className="w-full border-t border-white/[0.06] py-6 text-center text-xs text-neutral-400">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <div className="flex items-center gap-2 font-mono">
-            <span className="font-semibold text-neutral-300">ClarityAI</span>
-            <span>&bull;</span>
-            <span className="text-neutral-400">AI Conceptual Understanding Diagnostic</span>
+      {/* Footer */}
+      <footer className="w-full border-t border-white/10 py-6 text-xs text-slate-400 bg-slate-950/40 backdrop-blur-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-2">
+            <span className="font-display font-bold text-white">Clarity</span>
+            <span className="text-slate-600">&bull;</span>
+            <span className="text-slate-400">Conceptual Understanding & Reasoning Platform</span>
           </div>
-          <div className="text-neutral-400 font-mono text-[11px]">
-            Calibrated Cognitive Intelligence
+          <div className="flex items-center gap-2 text-[11px] text-slate-400 font-mono-code">
+            <span className="w-2 h-2 rounded-full bg-emerald-400" />
+            <span>First-Principles Diagnostics &bull; Operational</span>
           </div>
         </div>
       </footer>

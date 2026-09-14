@@ -1,4 +1,6 @@
 from rest_framework import serializers
+from .models import DiagnosticRecord
+
 
 class AnalyzeRequestSerializer(serializers.Serializer):
     topic = serializers.CharField(
@@ -103,3 +105,32 @@ class FinalDiagnoseRequestSerializer(serializers.Serializer):
         }
     )
 
+
+class DiagnosticRecordListSerializer(serializers.ModelSerializer):
+    """
+    Lightweight serializer for displaying the diagnostic archive list.
+    """
+    class Meta:
+        model = DiagnosticRecord
+        fields = [
+            'id',
+            'topic',
+            'confidence',
+            'initial_score',
+            'final_score',
+            'verdict',
+            'summary',
+            'core_accuracy',
+            'causal_depth',
+            'relational_coherence',
+            'created_at',
+        ]
+
+
+class DiagnosticRecordDetailSerializer(serializers.ModelSerializer):
+    """
+    Complete serializer for full diagnostic report inspection.
+    """
+    class Meta:
+        model = DiagnosticRecord
+        fields = '__all__'
