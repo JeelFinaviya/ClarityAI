@@ -6,10 +6,15 @@
 const getApiBaseUrl = () => {
   const envUrl = import.meta.env.VITE_API_BASE_URL;
   if (envUrl) {
-    return envUrl.endsWith('/') ? envUrl.slice(0, -1) : envUrl;
+    let clean = envUrl.trim().endsWith('/') ? envUrl.trim().slice(0, -1) : envUrl.trim();
+    if (!clean.endsWith('/api')) {
+      clean += '/api';
+    }
+    return clean;
   }
   return 'http://127.0.0.1:8000/api';
 };
+
 
 /**
  * Send topic, explanation, and confidence to Django for Gemini analysis.

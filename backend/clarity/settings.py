@@ -108,7 +108,11 @@ cors_origins_env = os.getenv(
     'http://localhost:5173,http://127.0.0.1:5173,http://localhost:3000,http://127.0.0.1:3000'
 )
 CORS_ALLOWED_ORIGINS = [origin.strip() for origin in cors_origins_env.split(',') if origin.strip()]
+CORS_ALLOWED_ORIGIN_REGEXES = [
+    r"^https://.*\.vercel\.app$",
+]
 CORS_ALLOW_CREDENTIALS = True
+
 
 # Google Gemini API Configuration
 GEMINI_API_KEY = os.getenv('GEMINI_API_KEY', '')
