@@ -44,6 +44,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'analysis.middleware.OpenCorsMiddleware',  # Guaranteed universal CORS handler
     'corsheaders.middleware.CorsMiddleware',  # Top of middleware chain for CORS
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
