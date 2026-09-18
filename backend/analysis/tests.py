@@ -356,3 +356,297 @@ class DiagnosticHistoryAPITests(TestCase):
         self.assertEqual(res.status_code, status.HTTP_201_CREATED)
         self.assertIn("id", res.data)
         self.assertTrue(DiagnosticRecord.objects.filter(topic="Backpropagation").exists())
+
+
+class MCQAssessmentAPITests(TestCase):
+    def setUp(self):
+        self.client = APIClient()
+        self.generate_url = reverse('mcq_generate')
+        self.submit_url = reverse('mcq_submit')
+
+    def _make_mock_mcq_response(self, topic="React Virtual DOM", count=3):
+        questions = []
+        for i in range(1, count + 1):
+            questions.append({
+                "id": f"q{i}",
+                "question": f"Mechanistic inquiry question {i} regarding {topic}?",
+                "options": [
+                    f"Option A for {topic} mechanism {i}",
+                    f"Option B for {topic} mechanism {i}",
+                    f"Option C for {topic} mechanism {i}",
+                    f"Option D for {topic} mechanism {i}",
+                ],
+                "correct_answer": (i - 1) % 4,
+                "explanation": f"Detailed reason why option {(i - 1) % 4} is scientifically accurate.",
+                "concept": f"Concept {i}",
+                "difficulty": "medium",
+            })
+        
+        import json
+        return type('MockResponse', (), {
+            'text': json.dumps({
+                "topic": topic,
+                "questions": questions
+            })
+        })()
+
+    def test_generate_3_mcqs_quick(self):
+        """Test generating 3 quick MCQs."""
+        mock_resp = self._make_mock_mcq_response(topic="React Virtual DOM", count=3)
+        with patch('analysis.gemini_service._get_api_key', return_value='mock-valid-key'), \
+             patch('analysis.gemini_service.genai.Client') as mock_client_class:
+            mock_instance = mock_client_class.return_value
+            mock_instance.models.generate_content.return_value = mock_resp
+
+            payload = {
+                "topic": "React Virtual DOM",
+                "explanation": "The Virtual DOM is an in-memory representation of UI that minimizes expensive browser DOM operations through diffing.",
+                "confidence": 90,
+                "question_count": 3,
+            }
+            res = self.client.post(self.generate_url, payload, format='json')
+            self.assertEqual(res.status_code, status.HTTP_200_OK)
+            self.assertEqual(len(res.data["questions"]), 3)
+            self.assertIn("assessment_token", res.data)
+
+    def test_generate_5_mcqs_standard(self):
+        """Test generating 5 standard MCQs."""
+        mock_resp = self._make_mock_mcq_response(topic="Binary Search", count=5)
+        with patch('analysis.gemini_service._get_api_key', return_value='mock-valid-key'), \
+             patch('analysis.gemini_service.genai.Client') as mock_client_class:
+            mock_instance = mock_client_class.return_value
+            mock_instance.models.generate_content.return_value = mock_resp
+
+            payload = {
+                "topic": "Binary Search",
+                "explanation": "Binary search divides the search space in half at each step by comparing target with mid in a sorted array.",
+                "confidence": 75,
+                "question_count": 5,
+            }
+            res = self.client.post(self.generate_url, payload, format='json')
+            self.assertEqual(res.status_code, status.HTTP_200_OK)
+            self.assertEqual(len(res.data["questions"]), 5)
+
+    def test_generate_7_mcqs_deep(self):
+        """Test generating 7 deep MCQs."""
+        mock_resp = self._make_mock_mcq_response(topic="CAP Theorem", count=7)
+        with patch('analysis.gemini_service._get_api_key', return_value='mock-valid-key'), \
+             patch('analysis.gemini_service.genai.Client') as mock_client_class:
+            mock_instance = mock_client_class.return_value
+            mock_instance.models.generate_content.return_value = mock_resp
+
+            payload = {
+                "topic": "CAP Theorem",
+                "explanation": "Distributed data stores can only guarantee at most two out of Consistency, Availability, and Partition Tolerance.",
+                "confidence": 40,
+                "question_count": 7,
+            }
+            res = self.client.post(self.generate_url, payload, format='json')
+            self.assertEqual(res.status_code, status.HTTP_200_OK)
+            self.assertEqual(len(res.data["questions"]), 7)
+
+    def test_mcq_structure_and_security(self):
+        """Verify exactly 4 options per question and that correct_answer is NEVER sent in API response."""
+        mock_resp = self._make_mock_mcq_response(topic="DNS Resolution", count=3)
+        with patch('analysis.gemini_service._get_api_key', return_value='mock-valid-key'), \
+             patch('analysis.gemini_service.genai.Client') as mock_client_class:
+            mock_instance = mock_client_class.return_value
+            mock_instance.models.generate_content.return_value = mock_resp
+
+            payload = {
+                "topic": "DNS Resolution",
+                "explanation": "DNS resolution translates human-readable domain names into IP addresses through hierarchical nameserver queries.",
+                "confidence": 85,
+                "question_count": 3,
+            }
+            res = self.client.post(self.generate_url, payload, format='json')
+            self.assertEqual(res.status_code, status.HTTP_200_OK)
+
+            for q in res.data["questions"]:
+                self.assertEqual(len(q["options"]), 4)
+                self.assertNotIn("correct_answer", q)
+                self.assertNotIn("explanation", q)
+                self.assertIn("id", q)
+                self.assertIn("question", q)
+                self.assertIn("concept", q)
+                self.assertIn("difficulty", q)
+
+    def test_malformed_gemini_response_rejected(self):
+        """Test that malformed JSON or schema non-conformance from Gemini returns 502."""
+        mock_resp = type('MockResponse', (), {
+            'text': '{"invalid": "schema"}'
+        })()
+        with patch('analysis.gemini_service._get_api_key', return_value='mock-valid-key'), \
+             patch('analysis.gemini_service.genai.Client') as mock_client_class:
+            mock_instance = mock_client_class.return_value
+            mock_instance.models.generate_content.return_value = mock_resp
+
+            payload = {
+                "topic": "DNS Resolution",
+                "explanation": "DNS resolution translates human-readable domain names into IP addresses through hierarchical nameserver queries.",
+                "confidence": 85,
+            }
+            res = self.client.post(self.generate_url, payload, format='json')
+            self.assertEqual(res.status_code, status.HTTP_502_BAD_GATEWAY)
+
+    def test_mcq_submit_success_and_auto_save(self):
+        """Test valid MCQ submission produces synthesized diagnostic and saves to DB."""
+        # 1. Generate MCQs
+        mock_mcq_resp = self._make_mock_mcq_response(topic="React Virtual DOM", count=3)
+        mock_synthesis_resp = type('MockResponse', (), {
+            'text': '''{
+                "topic": "React Virtual DOM",
+                "understanding_score": 85,
+                "understanding_level": "Solid Mechanical Understanding",
+                "diagnostic_dimensions": {
+                    "core_accuracy": 90,
+                    "causal_depth": 85,
+                    "relational_coherence": 80
+                },
+                "confidence_calibration": {
+                    "status": "calibrated",
+                    "gap_analysis": "Confidence matches strong demonstrated MCQ mechanism comprehension."
+                },
+                "concepts_understood": [
+                    {
+                        "concept": "Reconciliation Diffing",
+                        "depth": "causal_mechanism",
+                        "evidence": "Correctly identified tree diffing in MCQ assessment."
+                    }
+                ],
+                "missing_concepts": [],
+                "possible_misconceptions": [],
+                "summary": "Demonstrated solid mechanical understanding of Virtual DOM reconciliation.",
+                "diagnostic_journey": {
+                    "initial_hypothesis": "Initial explanation defined Virtual DOM accurately.",
+                    "investigated_gap": "Targeted reconciliation invariants and update scheduling.",
+                    "followup_finding": "Student correctly answered mechanistic questions.",
+                    "synthesis_summary": "Upgraded understanding score based on empirical evidence."
+                }
+            }'''
+        })()
+
+        with patch('analysis.gemini_service._get_api_key', return_value='mock-valid-key'), \
+             patch('analysis.gemini_service.genai.Client') as mock_client_class:
+            mock_instance = mock_client_class.return_value
+            mock_instance.models.generate_content.side_effect = [mock_mcq_resp, mock_synthesis_resp]
+
+            gen_payload = {
+                "topic": "React Virtual DOM",
+                "explanation": "The Virtual DOM is an in-memory representation of UI that minimizes expensive browser DOM operations through diffing.",
+                "confidence": 85,
+                "question_count": 3,
+            }
+            gen_res = self.client.post(self.generate_url, gen_payload, format='json')
+            token = gen_res.data["assessment_token"]
+
+            submit_payload = {
+                "assessment_token": token,
+                "topic": "React Virtual DOM",
+                "initial_explanation": "The Virtual DOM is an in-memory representation of UI that minimizes expensive browser DOM operations through diffing.",
+                "confidence": 85,
+                "answers": [
+                    {"question_id": "q1", "selected_option": 0},
+                    {"question_id": "q2", "selected_option": 1},
+                    {"question_id": "q3", "selected_option": 2},
+                ]
+            }
+            submit_res = self.client.post(self.submit_url, submit_payload, format='json')
+            self.assertEqual(submit_res.status_code, status.HTTP_200_OK)
+            self.assertEqual(submit_res.data["topic"], "React Virtual DOM")
+            self.assertEqual(submit_res.data["understanding_score"], 85)
+            self.assertIn("saved_record_id", submit_res.data)
+
+            # Check DB record
+            record = DiagnosticRecord.objects.get(id=submit_res.data["saved_record_id"])
+            self.assertEqual(record.topic, "React Virtual DOM")
+            self.assertEqual(record.final_score, 85)
+
+    def test_mcq_submit_missing_answer_rejected(self):
+        """Test submitting incomplete answers returns 400 Bad Request."""
+        mock_mcq_resp = self._make_mock_mcq_response(topic="React Virtual DOM", count=3)
+        with patch('analysis.gemini_service._get_api_key', return_value='mock-valid-key'), \
+             patch('analysis.gemini_service.genai.Client') as mock_client_class:
+            mock_instance = mock_client_class.return_value
+            mock_instance.models.generate_content.return_value = mock_mcq_resp
+
+            gen_res = self.client.post(self.generate_url, {
+                "topic": "React Virtual DOM",
+                "explanation": "The Virtual DOM is an in-memory representation of UI that minimizes expensive browser DOM operations through diffing.",
+                "confidence": 85,
+                "question_count": 3,
+            }, format='json')
+            token = gen_res.data["assessment_token"]
+
+            # Only answer q1 and q2, missing q3
+            submit_res = self.client.post(self.submit_url, {
+                "assessment_token": token,
+                "topic": "React Virtual DOM",
+                "initial_explanation": "The Virtual DOM is an in-memory representation of UI that minimizes expensive browser DOM operations through diffing.",
+                "confidence": 85,
+                "answers": [
+                    {"question_id": "q1", "selected_option": 0},
+                    {"question_id": "q2", "selected_option": 1},
+                ]
+            }, format='json')
+            self.assertEqual(submit_res.status_code, status.HTTP_400_BAD_REQUEST)
+            self.assertIn("Missing answers", submit_res.data["message"])
+
+    def test_mcq_submit_invalid_question_id_rejected(self):
+        """Test submitting unrecognized question IDs returns 400 Bad Request."""
+        mock_mcq_resp = self._make_mock_mcq_response(topic="React Virtual DOM", count=3)
+        with patch('analysis.gemini_service._get_api_key', return_value='mock-valid-key'), \
+             patch('analysis.gemini_service.genai.Client') as mock_client_class:
+            mock_instance = mock_client_class.return_value
+            mock_instance.models.generate_content.return_value = mock_mcq_resp
+
+            gen_res = self.client.post(self.generate_url, {
+                "topic": "React Virtual DOM",
+                "explanation": "The Virtual DOM is an in-memory representation of UI that minimizes expensive browser DOM operations through diffing.",
+                "confidence": 85,
+                "question_count": 3,
+            }, format='json')
+            token = gen_res.data["assessment_token"]
+
+            submit_res = self.client.post(self.submit_url, {
+                "assessment_token": token,
+                "topic": "React Virtual DOM",
+                "initial_explanation": "The Virtual DOM is an in-memory representation of UI that minimizes expensive browser DOM operations through diffing.",
+                "confidence": 85,
+                "answers": [
+                    {"question_id": "q1", "selected_option": 0},
+                    {"question_id": "q2", "selected_option": 1},
+                    {"question_id": "q999_fake", "selected_option": 2},
+                ]
+            }, format='json')
+            self.assertEqual(submit_res.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_mcq_submit_invalid_selected_option_rejected(self):
+        """Test selected option out of bounds (e.g. 5) returns 400 Bad Request."""
+        mock_mcq_resp = self._make_mock_mcq_response(topic="React Virtual DOM", count=3)
+        with patch('analysis.gemini_service._get_api_key', return_value='mock-valid-key'), \
+             patch('analysis.gemini_service.genai.Client') as mock_client_class:
+            mock_instance = mock_client_class.return_value
+            mock_instance.models.generate_content.return_value = mock_mcq_resp
+
+            gen_res = self.client.post(self.generate_url, {
+                "topic": "React Virtual DOM",
+                "explanation": "The Virtual DOM is an in-memory representation of UI that minimizes expensive browser DOM operations through diffing.",
+                "confidence": 85,
+                "question_count": 3,
+            }, format='json')
+            token = gen_res.data["assessment_token"]
+
+            submit_res = self.client.post(self.submit_url, {
+                "assessment_token": token,
+                "topic": "React Virtual DOM",
+                "initial_explanation": "The Virtual DOM is an in-memory representation of UI that minimizes expensive browser DOM operations through diffing.",
+                "confidence": 85,
+                "answers": [
+                    {"question_id": "q1", "selected_option": 0},
+                    {"question_id": "q2", "selected_option": 1},
+                    {"question_id": "q3", "selected_option": 9},
+                ]
+            }, format='json')
+            self.assertEqual(submit_res.status_code, status.HTTP_400_BAD_REQUEST)
+

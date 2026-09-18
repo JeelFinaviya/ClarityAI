@@ -289,3 +289,156 @@ export async function saveDiagnosticRecord(payload) {
     throw err;
   }
 }
+
+/**
+ * Request an adaptive multiple-choice diagnostic assessment from Django.
+ * @param {string} topic
+ * @param {string} explanation
+ * @param {number} confidence
+ * @param {Object} [initialDiagnostic]
+ * @param {number} [questionCount]
+ * @returns {Promise<Object>}
+ */
+export async function generateMCQAssessment(topic, explanation, confidence, initialDiagnostic = null, questionCount = null) {
+  const baseUrl = getApiBaseUrl();
+  const endpoint = `${baseUrl}/mcq/generate/`;
+
+  const body = {
+    topic,
+    explanation,
+    confidence: Number(confidence),
+  };
+  if (initialDiagnostic) {
+    body.initial_diagnostic = initialDiagnostic;
+  }
+  if (questionCount && [3, 5, 7].includes(questionCount)) {
+    body.question_count = questionCount;
+  }
+
+  try {
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: JSON.stringify(body),
+    });
+
+    const responseData = await response.json().catch(() => null);
+
+    if (!response.ok) {
+      let errorMessage = 'Failed to generate MCQ assessment.';
+      if (responseData) {
+        if (responseData.details && typeof responseData.details === 'object') {
+          const firstField = Object.keys(responseData.details)[0];
+          const fieldErrors = responseData.details[firstField];
+          errorMessage = Array.isArray(fieldErrors) ? fieldErrors[0] : String(fieldErrors);
+        } else if (responseData.message) {
+          errorMessage = responseData.message;
+        } else if (responseData.error) {
+          errorMessage = responseData.error;
+        }
+      } else if (response.status === 503) {
+        errorMessage = 'AI service is not configured (missing API key).';
+      } else if (response.status === 502) {
+        errorMessage = 'The AI service is temporarily unavailable or returned an invalid assessment schema.';
+      } else if (response.status >= 500) {
+        errorMessage = 'Backend server encountered an unexpected error generating your assessment.';
+      }
+
+      const error = new Error(errorMessage);
+      error.status = response.status;
+      error.data = responseData;
+      throw error;
+    }
+
+    return responseData;
+  } catch (err) {
+    if (err.name === 'TypeError' && err.message.includes('fetch')) {
+      const netError = new Error('Cannot connect to backend server. Please make sure Django is running at ' + baseUrl);
+      netError.isNetworkError = true;
+      throw netError;
+    }
+    throw err;
+  }
+}
+
+/**
+ * Submit completed MCQ answers for server-side grading and final synthesis.
+ * @param {Object} payload
+ * @param {string} payload.assessment_token
+ * @param {string} payload.topic
+ * @param {string} payload.initial_explanation
+ * @param {number} payload.confidence
+ * @param {Array<{question_id: string, selected_option: number}>} payload.answers
+ * @param {Object} [payload.initial_diagnostic]
+ * @returns {Promise<Object>}
+ */
+export async function submitMCQAssessment({
+  assessment_token,
+  topic,
+  initial_explanation,
+  confidence,
+  answers,
+  initial_diagnostic = null,
+}) {
+  const baseUrl = getApiBaseUrl();
+  const endpoint = `${baseUrl}/mcq/submit/`;
+
+  try {
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: JSON.stringify({
+        assessment_token,
+        topic,
+        initial_explanation,
+        confidence: Number(confidence),
+        answers,
+        initial_diagnostic,
+      }),
+    });
+
+    const responseData = await response.json().catch(() => null);
+
+    if (!response.ok) {
+      let errorMessage = 'Failed to submit MCQ assessment.';
+      if (responseData) {
+        if (responseData.details && typeof responseData.details === 'object') {
+          const firstField = Object.keys(responseData.details)[0];
+          const fieldErrors = responseData.details[firstField];
+          errorMessage = Array.isArray(fieldErrors) ? fieldErrors[0] : String(fieldErrors);
+        } else if (responseData.message) {
+          errorMessage = responseData.message;
+        } else if (responseData.error) {
+          errorMessage = responseData.error;
+        }
+      } else if (response.status === 503) {
+        errorMessage = 'AI service is not configured (missing API key).';
+      } else if (response.status === 502) {
+        errorMessage = 'The AI service is temporarily unavailable or returned an invalid final synthesis.';
+      } else if (response.status >= 500) {
+        errorMessage = 'Backend server encountered an unexpected error processing final evaluation.';
+      }
+
+      const error = new Error(errorMessage);
+      error.status = response.status;
+      error.data = responseData;
+      throw error;
+    }
+
+    return responseData;
+  } catch (err) {
+    if (err.name === 'TypeError' && err.message.includes('fetch')) {
+      const netError = new Error('Cannot connect to backend server. Please make sure Django is running at ' + baseUrl);
+      netError.isNetworkError = true;
+      throw netError;
+    }
+    throw err;
+  }
+}
+
