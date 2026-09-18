@@ -5,12 +5,13 @@ import { ExplainPage } from './pages/ExplainPage';
 import { ConfidencePage } from './pages/ConfidencePage';
 import { AnalysisReadyPage } from './pages/AnalysisReadyPage';
 import { ArchivePage } from './pages/ArchivePage';
+import { InterviewLabPage } from './pages/InterviewLabPage';
 
 export default function App() {
-  // Step state: 'landing' | 'explain' | 'confidence' | 'ready' | 'archive'
+  // Step state: 'landing' | 'explain' | 'confidence' | 'ready' | 'archive' | 'interview-lab'
   const [step, setStep] = useState(() => {
     const hash = window.location.hash.replace('#', '');
-    if (['landing', 'explain', 'confidence', 'ready', 'archive'].includes(hash)) {
+    if (['landing', 'explain', 'confidence', 'ready', 'archive', 'interview-lab'].includes(hash)) {
       return hash;
     }
     return 'landing';
@@ -25,7 +26,7 @@ export default function App() {
   useEffect(() => {
     const handlePopState = () => {
       const hash = window.location.hash.replace('#', '');
-      if (['landing', 'explain', 'confidence', 'ready', 'archive'].includes(hash)) {
+      if (['landing', 'explain', 'confidence', 'ready', 'archive', 'interview-lab'].includes(hash)) {
         setStep(hash);
       } else {
         setStep('landing');
@@ -84,12 +85,21 @@ export default function App() {
         currentStep={step}
         onReset={handleReset}
         onNavigateArchive={() => navigateTo('archive')}
+        onNavigateInterviewLab={() => navigateTo('interview-lab')}
       />
 
       {/* Main Content Area */}
       <main className="flex-1 flex flex-col">
         {step === 'landing' && (
-          <LandingPage onStart={handleStart} onSelectTopic={handleSelectTopic} />
+          <LandingPage 
+            onStart={handleStart} 
+            onSelectTopic={handleSelectTopic} 
+            onNavigateInterviewLab={() => navigateTo('interview-lab')}
+          />
+        )}
+
+        {step === 'interview-lab' && (
+          <InterviewLabPage onSelectTopicForExplorer={handleSelectTopic} />
         )}
 
         {step === 'explain' && (

@@ -6,10 +6,8 @@ import {
   Sparkles, 
   History, 
   Trophy, 
-  X,
-  Layers,
-  ArrowLeft,
-  Filter
+  ArrowLeft, 
+  Filter 
 } from 'lucide-react';
 import { fetchDiagnosticHistory, fetchDiagnosticDetail, deleteDiagnosticRecord } from '../services/api';
 import { ResultsView } from '../components/ResultsView';

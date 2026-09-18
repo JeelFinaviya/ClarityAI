@@ -1,10 +1,6 @@
 import React from 'react';
 import { 
   Sparkles, 
-  BrainCircuit, 
-  Trophy, 
-  Zap, 
-  ShieldCheck, 
   ArrowRight, 
   Layers, 
   Target, 
@@ -12,10 +8,11 @@ import {
   Cpu, 
   Database, 
   Network,
-  BookOpen
+  BookOpen,
+  Trophy
 } from 'lucide-react';
 
-export function LandingPage({ onStart, onSelectTopic }) {
+export function LandingPage({ onStart, onSelectTopic, onNavigateInterviewLab }) {
   const popularTopics = [
     {
       title: 'React Virtual DOM',
@@ -77,7 +74,7 @@ export function LandingPage({ onStart, onSelectTopic }) {
     { rank: '👑 First-Principles Mastery', score: '89–100%', desc: 'Deep causal mechanics & edge case mastery.' },
     { rank: '⚔️ Mechanics Specialist', score: '71–88%', desc: 'Clear working knowledge with step-by-step logic.' },
     { rank: '🛡️ Concept Explorer', score: '46–70%', desc: 'Understands basics but relies on high-level analogies.' },
-    { rank: '🔍 Surface Familiarity', score: '0–45%', desc: 'Definitions and buzzwords without operational mechanisms.' }
+    { rank: '🔍 Surface Familiarity', score: '0–45%', desc: 'Definitions and buzzwords without operational mechanics.' }
   ];
 
   return (
@@ -100,7 +97,7 @@ export function LandingPage({ onStart, onSelectTopic }) {
       </div>
 
       {/* Primary CTA Buttons */}
-      <div className="flex flex-col sm:flex-row items-center gap-4 mb-16">
+      <div className="flex flex-col sm:flex-row items-center gap-3.5 mb-16 w-full max-w-md sm:max-w-none justify-center">
         <button
           type="button"
           onClick={onStart}
@@ -110,6 +107,17 @@ export function LandingPage({ onStart, onSelectTopic }) {
           <span>Start Understanding Test</span>
           <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
         </button>
+
+        {onNavigateInterviewLab && (
+          <button
+            type="button"
+            onClick={onNavigateInterviewLab}
+            className="w-full sm:w-auto px-6 py-4 rounded-2xl bg-slate-900/90 hover:bg-slate-800 text-slate-200 hover:text-white font-display text-base font-semibold border border-white/10 hover:border-indigo-500/40 shadow-lg hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2.5 cursor-pointer"
+          >
+            <BookOpen className="w-5 h-5 text-cyan-400" />
+            <span>50 React Interview Questions</span>
+          </button>
+        )}
       </div>
 
       {/* Step Walkthrough Cards */}

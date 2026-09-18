@@ -3,11 +3,7 @@ import {
   BrainCircuit, 
   ArrowRight, 
   Sparkles, 
-  Lightbulb, 
-  CheckCircle2, 
-  Flame, 
-  AlertCircle,
-  HelpCircle
+  Lightbulb
 } from 'lucide-react';
 
 export function ExplainPage({

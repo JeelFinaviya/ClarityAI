@@ -1,17 +1,11 @@
 import React from 'react';
 import { 
-  Trophy, 
-  RotateCcw, 
-  ShieldCheck, 
   AlertTriangle, 
   CheckCircle2, 
   Zap, 
   Sparkles, 
-  Layers, 
-  ArrowRight,
   TrendingUp,
-  Target,
-  Award
+  Target
 } from 'lucide-react';
 
 export function ResultsView({

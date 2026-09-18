@@ -4,11 +4,7 @@ import {
   Sparkles, 
   Lightbulb, 
   Send, 
-  AlertCircle, 
-  HelpCircle,
-  Flame,
-  CheckCircle2,
-  HelpCircle as QuestionIcon
+  AlertCircle
 } from 'lucide-react';
 
 export function DiagnosticProbePage({

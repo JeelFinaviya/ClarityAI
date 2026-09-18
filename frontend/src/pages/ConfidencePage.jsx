@@ -1,13 +1,5 @@
 import React from 'react';
-import { 
-  Zap, 
-  ArrowRight, 
-  ShieldAlert, 
-  Sparkles, 
-  HelpCircle, 
-  Award, 
-  Flame 
-} from 'lucide-react';
+import { Zap, ArrowRight } from 'lucide-react';
 
 export function ConfidencePage({
   topic,
