@@ -114,6 +114,12 @@ CORS_ALLOW_ALL_ORIGINS = True
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 CORS_PREFLIGHT_MAX_AGE = 86400
+CORS_ALLOWED_ORIGIN_REGEXES = [
+    r"^https:\/\/.*\.vercel\.app$",
+    r"^https:\/\/.*\.onrender\.com$",
+    r"^http:\/\/localhost:[0-9]+$",
+    r"^http:\/\/127\.0\.0\.1:[0-9]+$",
+]
 CORS_ALLOW_METHODS = [
     'DELETE',
     'GET',
@@ -126,9 +132,11 @@ CORS_ALLOW_HEADERS = [
     'accept',
     'accept-encoding',
     'authorization',
+    'cache-control',
     'content-type',
     'dnt',
     'origin',
+    'pragma',
     'user-agent',
     'x-csrftoken',
     'x-requested-with',
