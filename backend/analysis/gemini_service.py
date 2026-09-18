@@ -269,15 +269,12 @@ def _get_api_key() -> str:
 
 
 def _get_candidate_models() -> list[str]:
-    """Returns preferred model list with reliable fallbacks."""
-    configured = os.getenv('GEMINI_MODEL') or getattr(settings, 'GEMINI_MODEL', 'gemini-2.5-flash')
+    """Returns the configured Gemini model only."""
+    configured = os.getenv('GEMINI_MODEL') or getattr(
+        settings, 'GEMINI_MODEL', 'gemini-3.6-flash'
+    )
     configured = configured.strip("'\" \t\n\r")
-
-    models = [configured]
-    for fallback in ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-1.5-flash']:
-        if fallback not in models:
-            models.append(fallback)
-    return models
+    return [configured]
 
 
 
@@ -315,7 +312,7 @@ Evaluate the explanation across core accuracy, causal depth, relational coherenc
         last_exception = None
 
         for model_name in candidate_models:
-            for attempt in range(2):
+            for attempt in range(3):
                 try:
                     response = client.models.generate_content(
                         model=model_name,
@@ -352,7 +349,7 @@ Evaluate the explanation across core accuracy, causal depth, relational coherenc
                     logger.warning(
                         f"Attempt {attempt + 1} with model {model_name} encountered temporary API error: {str(api_err)}"
                     )
-                    time.sleep(1.0)
+                    time.sleep(2 ** (attempt + 1))
                 except GeminiResponseValidationError as val_err:
                     logger.error(f"Validation error with model {model_name}: {str(val_err)}")
                     last_exception = val_err
@@ -406,7 +403,7 @@ Evaluate whether the follow-up response confirmed genuine causal understanding, 
         last_exception = None
 
         for model_name in candidate_models:
-            for attempt in range(2):
+            for attempt in range(3):
                 try:
                     response = client.models.generate_content(
                         model=model_name,
@@ -443,7 +440,7 @@ Evaluate whether the follow-up response confirmed genuine causal understanding, 
                     logger.warning(
                         f"Attempt {attempt + 1} with model {model_name} encountered temporary API error: {str(api_err)}"
                     )
-                    time.sleep(1.0)
+                    time.sleep(2 ** (attempt + 1))
                 except GeminiResponseValidationError as val_err:
                     logger.error(f"Validation error with model {model_name}: {str(val_err)}")
                     last_exception = val_err
