@@ -26,6 +26,13 @@ MCQ_TOKEN_SALT = 'clarity.mcq.assessment.v1'
 logger = logging.getLogger(__name__)
 
 
+def _format_gemini_api_error_message(err: Exception, default_msg: str) -> str:
+    err_str = str(err)
+    if "RESOURCE_EXHAUSTED" in err_str or "429" in err_str or "Quota exceeded" in err_str:
+        return "Gemini API rate limit or quota exceeded (429 RESOURCE_EXHAUSTED). Please wait a few moments before retrying."
+    return default_msg
+
+
 def _save_completed_diagnostic(
     topic: str,
     initial_explanation: str,
@@ -143,7 +150,10 @@ class AnalyzeExplanationView(APIView):
             return Response(
                 {
                     "error": "AI Service Unavailable",
-                    "message": "Unable to reach the AI analysis service. Please verify your connection or retry in a few moments.",
+                    "message": _format_gemini_api_error_message(
+                        ae,
+                        "Unable to reach the AI analysis service. Please verify your connection or retry in a few moments."
+                    ),
                 },
                 status=status.HTTP_502_BAD_GATEWAY,
             )
@@ -246,7 +256,10 @@ class FinalDiagnoseExplanationView(APIView):
             return Response(
                 {
                     "error": "AI Service Unavailable",
-                    "message": "Unable to reach the AI analysis service. Please verify your connection or retry in a few moments.",
+                    "message": _format_gemini_api_error_message(
+                        ae,
+                        "Unable to reach the AI analysis service. Please verify your connection or retry in a few moments."
+                    ),
                 },
                 status=status.HTTP_502_BAD_GATEWAY,
             )
@@ -438,7 +451,10 @@ class MCQGenerateView(APIView):
             return Response(
                 {
                     "error": "AI Service Unavailable",
-                    "message": "Unable to reach the AI assessment service. Please verify your connection or retry in a few moments.",
+                    "message": _format_gemini_api_error_message(
+                        ae,
+                        "Unable to reach the AI assessment service. Please verify your connection or retry in a few moments."
+                    ),
                 },
                 status=status.HTTP_502_BAD_GATEWAY,
             )
@@ -617,7 +633,10 @@ class MCQSubmitView(APIView):
             return Response(
                 {
                     "error": "AI Service Unavailable",
-                    "message": "Unable to reach the AI analysis service. Please verify your connection or retry in a few moments.",
+                    "message": _format_gemini_api_error_message(
+                        ae,
+                        "Unable to reach the AI analysis service. Please verify your connection or retry in a few moments."
+                    ),
                 },
                 status=status.HTTP_502_BAD_GATEWAY,
             )
