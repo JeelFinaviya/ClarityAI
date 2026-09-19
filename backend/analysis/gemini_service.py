@@ -381,13 +381,13 @@ def _get_api_key() -> str:
 def _get_candidate_models() -> list[str]:
     """Returns candidate Gemini models with automatic fallbacks."""
     configured = os.getenv('GEMINI_MODEL') or getattr(
-        settings, 'GEMINI_MODEL', 'gemini-3.6-flash'
+        settings, 'GEMINI_MODEL', 'gemini-3.1-flash-lite'
     )
     configured = configured.strip("'\" \t\n\r")
     candidates = []
     if configured:
         candidates.append(configured)
-    for model in ['gemini-3.6-flash', 'gemini-3.5-flash', 'gemini-3.1-flash-lite']:
+    for model in ['gemini-3.1-flash-lite', 'gemini-3.5-flash', 'gemini-3.8-flash', 'gemini-3.6-flash']:
         if model not in candidates:
             candidates.append(model)
     return candidates
@@ -428,7 +428,7 @@ Evaluate the explanation across core accuracy, causal depth, relational coherenc
         last_exception = None
 
         for model_name in candidate_models:
-            for attempt in range(3):
+            for attempt in range(2):
                 try:
                     response = client.models.generate_content(
                         model=model_name,
@@ -465,7 +465,7 @@ Evaluate the explanation across core accuracy, causal depth, relational coherenc
                     logger.warning(
                         f"Attempt {attempt + 1} with model {model_name} encountered temporary API error: {str(api_err)}"
                     )
-                    time.sleep(2 ** (attempt + 1))
+                    time.sleep(1)
                 except GeminiResponseValidationError as val_err:
                     logger.error(f"Validation error with model {model_name}: {str(val_err)}")
                     last_exception = val_err
@@ -519,7 +519,7 @@ Evaluate whether the follow-up response confirmed genuine causal understanding, 
         last_exception = None
 
         for model_name in candidate_models:
-            for attempt in range(3):
+            for attempt in range(2):
                 try:
                     response = client.models.generate_content(
                         model=model_name,
@@ -556,7 +556,7 @@ Evaluate whether the follow-up response confirmed genuine causal understanding, 
                     logger.warning(
                         f"Attempt {attempt + 1} with model {model_name} encountered temporary API error: {str(api_err)}"
                     )
-                    time.sleep(2 ** (attempt + 1))
+                    time.sleep(1)
                 except GeminiResponseValidationError as val_err:
                     logger.error(f"Validation error with model {model_name}: {str(val_err)}")
                     last_exception = val_err
@@ -625,7 +625,7 @@ Return the assessment schema with exactly {count} questions."""
         last_exception = None
 
         for model_name in candidate_models:
-            for attempt in range(3):
+            for attempt in range(2):
                 try:
                     response = client.models.generate_content(
                         model=model_name,
@@ -664,7 +664,7 @@ Return the assessment schema with exactly {count} questions."""
                     logger.warning(
                         f"Attempt {attempt + 1} with model {model_name} encountered temporary API error: {str(api_err)}"
                     )
-                    time.sleep(2 ** (attempt + 1))
+                    time.sleep(1)
                 except GeminiResponseValidationError as val_err:
                     logger.error(f"Validation error with model {model_name}: {str(val_err)}")
                     last_exception = val_err
@@ -747,7 +747,7 @@ Synthesize the student's demonstrated grasp of mechanisms, causality, and system
         last_exception = None
 
         for model_name in candidate_models:
-            for attempt in range(3):
+            for attempt in range(2):
                 try:
                     response = client.models.generate_content(
                         model=model_name,
@@ -784,7 +784,7 @@ Synthesize the student's demonstrated grasp of mechanisms, causality, and system
                     logger.warning(
                         f"Attempt {attempt + 1} with model {model_name} encountered temporary API error: {str(api_err)}"
                     )
-                    time.sleep(2 ** (attempt + 1))
+                    time.sleep(1)
                 except GeminiResponseValidationError as val_err:
                     logger.error(f"Validation error with model {model_name}: {str(val_err)}")
                     last_exception = val_err
