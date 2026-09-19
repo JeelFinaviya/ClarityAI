@@ -1,11 +1,11 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 
 
 class OpenCorsMiddleware:
     """
-    Guarantees that every request (including OPTIONS preflights and error responses)
-    receives universal CORS headers for seamless cross-origin communication.
-    Dynamically mirrors the origin header to allow credentials while maintaining full cross-origin compatibility.
+    Guarantees that every request (including OPTIONS preflights, validation errors,
+    and 500 server errors) receives valid CORS headers for cross-origin communication.
+    Dynamically mirrors the requesting origin to allow credentials while maintaining strict origin safety.
     """
     def __init__(self, get_response):
         self.get_response = get_response
@@ -18,7 +18,20 @@ class OpenCorsMiddleware:
             self._apply_cors_headers(response, origin)
             return response
 
-        response = self.get_response(request)
+        try:
+            response = self.get_response(request)
+        except Exception as exc:
+            response = JsonResponse(
+                {
+                    "error": "Internal Server Error",
+                    "message": "An unexpected error occurred on the server.",
+                    "details": str(exc),
+                },
+                status=500,
+            )
+            self._apply_cors_headers(response, origin)
+            return response
+
         self._apply_cors_headers(response, origin)
         return response
 
@@ -36,4 +49,5 @@ class OpenCorsMiddleware:
             'x-csrftoken, X-CSRFToken, Cache-Control, Pragma'
         )
         response['Access-Control-Max-Age'] = '86400'
+
 
