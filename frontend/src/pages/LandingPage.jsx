@@ -77,18 +77,18 @@ export function LandingPage({ onStart, onSelectTopic, onNavigateInterviewLab }) 
     <div className="w-full flex-1 flex flex-col items-center justify-start arena-bg-radial px-4 sm:px-6 lg:px-8 py-10 sm:py-16">
       
       {/* Hero Badge */}
-      <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#ff5722]/10 border border-[#ff5722]/25 text-[#ff7a50] text-xs font-semibold mb-6 shadow-sm">
-        <Compass className="w-3.5 h-3.5 text-[#a3e635]" />
-        <span>Developer Conceptual Understanding & Technical Prep</span>
+      <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#3b82f6]/10 border border-[#3b82f6]/20 text-[#60a5fa] text-xs font-semibold mb-6 shadow-sm">
+        <Compass className="w-3.5 h-3.5 text-[#3b82f6]" />
+        <span>Technical Intelligence & Architectural Practice</span>
       </div>
 
-      {/* Main Hero Header */}
+      {/* Main Hero Header - Ultra High Contrast */}
       <div className="text-center max-w-3xl mx-auto mb-12">
-        <h1 className="font-display text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white mb-5 leading-tight">
-          Do you <span className="gradient-text-hero">actually understand</span> it, or just memorized the buzzwords?
+        <h1 className="font-display text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white mb-6 leading-tight">
+          Do you <span className="text-[#3b82f6]">actually understand</span> it, or just memorized the buzzwords?
         </h1>
-        <p className="text-sm sm:text-lg text-zinc-300 max-w-2xl mx-auto leading-relaxed">
-          Clarity tests your true mechanical grasp from first principles. Articulate concepts in your own words, uncover hidden blindspots with targeted diagnostics, and master 1,100+ curated interview questions.
+        <p className="text-base sm:text-lg text-slate-300 max-w-2xl mx-auto leading-relaxed font-normal">
+          Test your true mechanical grasp from first principles. Articulate concepts in your own words, uncover hidden blindspots with targeted diagnostics, and master 1,100+ curated technical questions.
         </p>
       </div>
 
@@ -96,15 +96,13 @@ export function LandingPage({ onStart, onSelectTopic, onNavigateInterviewLab }) 
       <div className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-6 mb-16">
         
         {/* Pillar 1: Concept Explorer */}
-        <div className="bg-[#121624] rounded-2xl p-6 sm:p-7 border border-[#ff5722]/30 shadow-xl relative overflow-hidden flex flex-col justify-between group hover:border-[#ff5722]/60 transition-all">
-          <div className="absolute top-0 right-0 w-36 h-36 bg-[#ff5722]/10 rounded-full blur-2xl pointer-events-none" />
-          
+        <div className="bg-[#121520] rounded-2xl p-6 sm:p-7 border border-white/10 shadow-lg flex flex-col justify-between group hover:border-[#3b82f6]/40 transition-all">
           <div>
             <div className="flex items-center justify-between mb-4">
-              <div className="w-10 h-10 rounded-xl bg-[#ff5722]/15 border border-[#ff5722]/30 flex items-center justify-center text-[#ff6b3a]">
+              <div className="w-10 h-10 rounded-xl bg-[#3b82f6]/10 border border-[#3b82f6]/20 flex items-center justify-center text-[#3b82f6]">
                 <BrainCircuit className="w-5 h-5" />
               </div>
-              <span className="text-[11px] font-mono-code font-semibold px-2.5 py-1 rounded-full bg-[#ff5722]/10 text-[#ff7a50] border border-[#ff5722]/20">
+              <span className="text-[11px] font-mono-code font-semibold px-2.5 py-1 rounded-md bg-[#3b82f6]/10 text-[#60a5fa] border border-[#3b82f6]/20">
                 Interactive Diagnostic
               </span>
             </div>
@@ -112,25 +110,25 @@ export function LandingPage({ onStart, onSelectTopic, onNavigateInterviewLab }) 
             <h2 className="font-display text-xl sm:text-2xl font-bold text-white mb-2">
               Concept Explorer
             </h2>
-            <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed mb-5 font-medium">
-              Test whether you actually understand a concept from first principles.
+            <p className="text-xs sm:text-sm text-slate-300 leading-relaxed mb-5 font-normal">
+              Test whether you actually understand a technical concept from first principles.
             </p>
 
-            <ul className="space-y-2.5 mb-6 text-xs text-zinc-300">
+            <ul className="space-y-2.5 mb-6 text-xs text-slate-300">
               <li className="flex items-start gap-2">
-                <CheckCircle2 className="w-4 h-4 text-[#a3e635] shrink-0 mt-0.5" />
+                <CheckCircle2 className="w-4 h-4 text-[#3b82f6] shrink-0 mt-0.5" />
                 <span>Explain in plain language without looking at documentation</span>
               </li>
               <li className="flex items-start gap-2">
-                <CheckCircle2 className="w-4 h-4 text-[#a3e635] shrink-0 mt-0.5" />
+                <CheckCircle2 className="w-4 h-4 text-[#3b82f6] shrink-0 mt-0.5" />
                 <span>Calibrate your confidence against your actual mechanical depth</span>
               </li>
               <li className="flex items-start gap-2">
-                <CheckCircle2 className="w-4 h-4 text-[#a3e635] shrink-0 mt-0.5" />
+                <CheckCircle2 className="w-4 h-4 text-[#3b82f6] shrink-0 mt-0.5" />
                 <span>Solve targeted diagnostic probes and adaptive scenario MCQs</span>
               </li>
               <li className="flex items-start gap-2">
-                <CheckCircle2 className="w-4 h-4 text-[#a3e635] shrink-0 mt-0.5" />
+                <CheckCircle2 className="w-4 h-4 text-[#3b82f6] shrink-0 mt-0.5" />
                 <span>Receive causal mastery scoring and misconception breakdowns</span>
               </li>
             </ul>
@@ -139,7 +137,7 @@ export function LandingPage({ onStart, onSelectTopic, onNavigateInterviewLab }) 
           <button
             type="button"
             onClick={onStart}
-            className="w-full py-3.5 px-5 rounded-xl bg-gradient-to-r from-[#ff5722] to-[#f97316] hover:from-[#ff6b3a] hover:to-[#ff5722] text-white font-semibold text-sm shadow-lg shadow-orange-500/25 hover:shadow-orange-500/40 transition-all flex items-center justify-center gap-2 cursor-pointer group/btn"
+            className="w-full py-3.5 px-5 rounded-xl bg-[#3b82f6] hover:bg-[#2563eb] text-white font-semibold text-sm shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer group/btn active:scale-[0.99]"
           >
             <span>Start Concept Evaluation</span>
             <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
@@ -147,15 +145,13 @@ export function LandingPage({ onStart, onSelectTopic, onNavigateInterviewLab }) 
         </div>
 
         {/* Pillar 2: Interview Lab */}
-        <div className="bg-[#121624] rounded-2xl p-6 sm:p-7 border border-[#a3e635]/30 shadow-xl relative overflow-hidden flex flex-col justify-between group hover:border-[#a3e635]/60 transition-all">
-          <div className="absolute top-0 right-0 w-36 h-36 bg-[#a3e635]/10 rounded-full blur-2xl pointer-events-none" />
-          
+        <div className="bg-[#121520] rounded-2xl p-6 sm:p-7 border border-white/10 shadow-lg flex flex-col justify-between group hover:border-[#3b82f6]/40 transition-all">
           <div>
             <div className="flex items-center justify-between mb-4">
-              <div className="w-10 h-10 rounded-xl bg-[#a3e635]/15 border border-[#a3e635]/30 flex items-center justify-center text-[#a3e635]">
+              <div className="w-10 h-10 rounded-xl bg-slate-800/80 border border-white/10 flex items-center justify-center text-slate-300">
                 <BookOpen className="w-5 h-5" />
               </div>
-              <span className="text-[11px] font-mono-code font-semibold px-2.5 py-1 rounded-full bg-[#a3e635]/10 text-[#a3e635] border border-[#a3e635]/20">
+              <span className="text-[11px] font-mono-code font-semibold px-2.5 py-1 rounded-md bg-slate-800 text-slate-300 border border-white/10">
                 1,100+ Questions &bull; 22 Topics
               </span>
             </div>
@@ -163,25 +159,25 @@ export function LandingPage({ onStart, onSelectTopic, onNavigateInterviewLab }) 
             <h2 className="font-display text-xl sm:text-2xl font-bold text-white mb-2">
               Interview Lab
             </h2>
-            <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed mb-5 font-medium">
+            <p className="text-xs sm:text-sm text-slate-300 leading-relaxed mb-5 font-normal">
               Prepare across 22 technical domains with 1,100+ curated interview questions.
             </p>
 
-            <ul className="space-y-2.5 mb-6 text-xs text-zinc-300">
+            <ul className="space-y-2.5 mb-6 text-xs text-slate-300">
               <li className="flex items-start gap-2">
-                <CheckCircle2 className="w-4 h-4 text-[#ff5722] shrink-0 mt-0.5" />
+                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
                 <span>50 high-value questions per topic across 22 software engineering areas</span>
               </li>
               <li className="flex items-start gap-2">
-                <CheckCircle2 className="w-4 h-4 text-[#ff5722] shrink-0 mt-0.5" />
+                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
                 <span>Frontend, Backend, Databases, Core CS, APIs, and Version Control</span>
               </li>
               <li className="flex items-start gap-2">
-                <CheckCircle2 className="w-4 h-4 text-[#ff5722] shrink-0 mt-0.5" />
+                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
                 <span>Mix of fundamentals, debugging, system scenarios, and trade-offs</span>
               </li>
               <li className="flex items-start gap-2">
-                <CheckCircle2 className="w-4 h-4 text-[#ff5722] shrink-0 mt-0.5" />
+                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
                 <span>100% free, local, and instantly searchable with zero latency</span>
               </li>
             </ul>
@@ -190,10 +186,10 @@ export function LandingPage({ onStart, onSelectTopic, onNavigateInterviewLab }) 
           <button
             type="button"
             onClick={onNavigateInterviewLab || onStart}
-            className="w-full py-3.5 px-5 rounded-xl bg-[#181d2e] hover:bg-[#1f253a] text-white font-semibold text-sm border border-white/10 hover:border-[#a3e635]/50 shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer group/btn"
+            className="w-full py-3.5 px-5 rounded-xl bg-[#181c2b] hover:bg-[#1e2336] text-white font-semibold text-sm border border-white/10 hover:border-white/20 shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer group/btn active:scale-[0.99]"
           >
             <span>Explore 22 Interview Topics</span>
-            <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform text-[#a3e635]" />
+            <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform text-[#3b82f6]" />
           </button>
         </div>
 
@@ -205,42 +201,42 @@ export function LandingPage({ onStart, onSelectTopic, onNavigateInterviewLab }) 
           <h2 className="font-display text-2xl sm:text-3xl font-bold text-white mb-2">
             The Concept Evaluation Process
           </h2>
-          <p className="text-zinc-400 text-xs sm:text-sm max-w-md mx-auto">
+          <p className="text-slate-400 text-xs sm:text-sm max-w-md mx-auto">
             A structured workflow to evaluate your mental models against rigorous first principles.
           </p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="bg-[#121624] rounded-xl p-5 border border-white/10 hover:border-[#ff5722]/40 transition-all flex flex-col">
-            <div className="w-8 h-8 rounded-lg bg-[#ff5722]/15 text-[#ff7a50] flex items-center justify-center text-xs font-mono-code font-bold mb-3">
+          <div className="bg-[#121520] rounded-xl p-5 border border-white/10 hover:border-[#3b82f6]/30 transition-all flex flex-col">
+            <div className="w-8 h-8 rounded-lg bg-[#3b82f6]/10 text-[#3b82f6] flex items-center justify-center text-xs font-mono-code font-bold mb-3">
               01
             </div>
             <h3 className="font-display text-sm font-bold text-white mb-1">Articulate</h3>
-            <p className="text-xs text-zinc-400 leading-relaxed">Write your explanation in plain English without looking up definitions.</p>
+            <p className="text-xs text-slate-400 leading-relaxed">Write your explanation in plain English without looking up definitions.</p>
           </div>
 
-          <div className="bg-[#121624] rounded-xl p-5 border border-white/10 hover:border-[#a3e635]/40 transition-all flex flex-col">
-            <div className="w-8 h-8 rounded-lg bg-[#a3e635]/15 text-[#a3e635] flex items-center justify-center text-xs font-mono-code font-bold mb-3">
+          <div className="bg-[#121520] rounded-xl p-5 border border-white/10 hover:border-[#3b82f6]/30 transition-all flex flex-col">
+            <div className="w-8 h-8 rounded-lg bg-slate-800 text-slate-300 flex items-center justify-center text-xs font-mono-code font-bold mb-3">
               02
             </div>
             <h3 className="font-display text-sm font-bold text-white mb-1">Set Conviction</h3>
-            <p className="text-xs text-zinc-400 leading-relaxed">Rate your confidence to test for overconfidence traps and blindspots.</p>
+            <p className="text-xs text-slate-400 leading-relaxed">Rate your confidence to test for overconfidence traps and blindspots.</p>
           </div>
 
-          <div className="bg-[#121624] rounded-xl p-5 border border-white/10 hover:border-[#ff7a50]/40 transition-all flex flex-col">
-            <div className="w-8 h-8 rounded-lg bg-[#ff7a50]/15 text-[#ff7a50] flex items-center justify-center text-xs font-mono-code font-bold mb-3">
+          <div className="bg-[#121520] rounded-xl p-5 border border-white/10 hover:border-[#3b82f6]/30 transition-all flex flex-col">
+            <div className="w-8 h-8 rounded-lg bg-slate-800 text-slate-300 flex items-center justify-center text-xs font-mono-code font-bold mb-3">
               03
             </div>
             <h3 className="font-display text-sm font-bold text-white mb-1">Targeted Probes & MCQs</h3>
-            <p className="text-xs text-zinc-400 leading-relaxed">Answer targeted follow-ups and scenario-based questions to verify causality.</p>
+            <p className="text-xs text-slate-400 leading-relaxed">Answer targeted follow-ups and scenario-based questions to verify causality.</p>
           </div>
 
-          <div className="bg-[#121624] rounded-xl p-5 border border-white/10 hover:border-[#a3e635]/40 transition-all flex flex-col">
-            <div className="w-8 h-8 rounded-lg bg-[#a3e635]/15 text-[#a3e635] flex items-center justify-center text-xs font-mono-code font-bold mb-3">
+          <div className="bg-[#121520] rounded-xl p-5 border border-white/10 hover:border-[#3b82f6]/30 transition-all flex flex-col">
+            <div className="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-xs font-mono-code font-bold mb-3">
               04
             </div>
             <h3 className="font-display text-sm font-bold text-white mb-1">Mastery Diagnostic</h3>
-            <p className="text-xs text-zinc-400 leading-relaxed">Receive a calibrated score, identified misconceptions, and strength insights.</p>
+            <p className="text-xs text-slate-400 leading-relaxed">Receive a calibrated score, identified misconceptions, and strength insights.</p>
           </div>
         </div>
       </div>
@@ -250,10 +246,10 @@ export function LandingPage({ onStart, onSelectTopic, onNavigateInterviewLab }) 
         <div className="flex items-center justify-between mb-6">
           <div>
             <h2 className="font-display text-xl sm:text-2xl font-bold text-white flex items-center gap-2">
-              <Target className="w-5 h-5 text-[#ff5722]" />
+              <Target className="w-5 h-5 text-[#3b82f6]" />
               <span>Explore Sample Concepts</span>
             </h2>
-            <p className="text-xs text-zinc-400 mt-1">Select a concept below or enter any custom technical topic of your choice.</p>
+            <p className="text-xs text-slate-400 mt-1">Select a concept below or enter any custom technical topic of your choice.</p>
           </div>
         </div>
 
@@ -264,29 +260,29 @@ export function LandingPage({ onStart, onSelectTopic, onNavigateInterviewLab }) 
               <div
                 key={topicItem.title}
                 onClick={() => onSelectTopic(topicItem.title)}
-                className="bg-[#121624] rounded-xl p-5 border border-white/10 hover:border-[#ff5722]/50 cursor-pointer flex flex-col justify-between group transition-all"
+                className="bg-[#121520] rounded-xl p-5 border border-white/10 hover:border-[#3b82f6]/40 cursor-pointer flex flex-col justify-between group transition-all"
               >
                 <div>
                   <div className="flex items-center justify-between mb-3">
-                    <div className="w-8 h-8 rounded-lg bg-[#ff5722]/10 border border-[#ff5722]/20 flex items-center justify-center text-[#ff6b3a]">
+                    <div className="w-8 h-8 rounded-lg bg-[#3b82f6]/10 border border-[#3b82f6]/20 flex items-center justify-center text-[#3b82f6]">
                       <IconComponent className="w-4 h-4" />
                     </div>
-                    <span className="px-2 py-0.5 rounded-md text-[10px] font-semibold bg-white/5 border border-white/10 text-zinc-300">
+                    <span className="px-2 py-0.5 rounded-md text-[10px] font-semibold bg-white/5 border border-white/10 text-slate-300">
                       {topicItem.badge}
                     </span>
                   </div>
 
-                  <h3 className="font-display text-sm sm:text-base font-bold text-white group-hover:text-[#ff7a50] transition-colors mb-1">
+                  <h3 className="font-display text-sm sm:text-base font-bold text-white group-hover:text-blue-200 transition-colors mb-1">
                     {topicItem.title}
                   </h3>
-                  <p className="text-xs text-zinc-400 leading-relaxed mb-4">
+                  <p className="text-xs text-slate-400 leading-relaxed mb-4">
                     {topicItem.desc}
                   </p>
                 </div>
 
                 <div className="flex items-center justify-between pt-3 border-t border-white/5 text-xs">
-                  <span className="text-zinc-500 font-medium">{topicItem.category}</span>
-                  <span className="text-[#ff5722] font-semibold group-hover:translate-x-1 transition-transform flex items-center gap-1">
+                  <span className="text-slate-500 font-medium">{topicItem.category}</span>
+                  <span className="text-[#3b82f6] font-semibold group-hover:translate-x-1 transition-transform flex items-center gap-1">
                     Evaluate ➔
                   </span>
                 </div>
@@ -297,21 +293,21 @@ export function LandingPage({ onStart, onSelectTopic, onNavigateInterviewLab }) 
       </div>
 
       {/* Understanding Calibration Breakdown */}
-      <div className="w-full max-w-5xl bg-[#121624] rounded-2xl p-6 sm:p-7 border border-white/10">
+      <div className="w-full max-w-5xl bg-[#121520] rounded-2xl p-6 sm:p-7 border border-white/10">
         <div className="flex items-center gap-3 mb-5">
-          <Trophy className="w-5 h-5 text-[#ff7a50]" />
+          <Trophy className="w-5 h-5 text-amber-400" />
           <div>
             <h3 className="font-display text-base sm:text-lg font-bold text-white">Understanding Calibration Tiers</h3>
-            <p className="text-xs text-zinc-400">How your conceptual explanations and responses are graded.</p>
+            <p className="text-xs text-slate-400">How your conceptual explanations and responses are graded.</p>
           </div>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
           {masteryTiers.map((item) => (
-            <div key={item.rank} className="bg-[#07090e]/70 rounded-xl p-3.5 border border-white/5">
-              <div className="font-display text-xs sm:text-sm font-bold text-zinc-100 mb-1">{item.rank}</div>
-              <div className="text-xs font-bold text-[#ff5722] mb-1.5 font-mono-code">{item.score}</div>
-              <div className="text-[11px] text-zinc-400 leading-relaxed">{item.desc}</div>
+            <div key={item.rank} className="bg-[#090a0f]/80 rounded-xl p-3.5 border border-white/5">
+              <div className="font-display text-xs sm:text-sm font-bold text-slate-100 mb-1">{item.rank}</div>
+              <div className="text-xs font-bold text-[#3b82f6] mb-1.5 font-mono-code">{item.score}</div>
+              <div className="text-[11px] text-slate-400 leading-relaxed">{item.desc}</div>
             </div>
           ))}
         </div>

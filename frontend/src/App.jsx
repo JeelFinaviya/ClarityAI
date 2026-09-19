@@ -79,7 +79,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#07090e] arena-bg-radial text-[#f3f4f6] font-sans selection:bg-orange-500/30 selection:text-orange-200">
+    <div className="min-h-screen flex flex-col bg-[#090a0f] arena-bg-radial text-[#f8fafc] font-sans selection:bg-blue-500/30 selection:text-blue-200">
       {/* Header */}
       <Header
         currentStep={step}
@@ -142,16 +142,16 @@ export default function App() {
       </main>
 
       {/* Footer */}
-      <footer className="w-full border-t border-white/10 py-6 text-xs text-zinc-400 bg-[#07090e]/80 backdrop-blur-md">
+      <footer className="w-full border-t border-white/5 py-6 text-xs text-slate-400 bg-[#090a0f]/90 backdrop-blur-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <span className="font-display font-bold text-white">Clarity</span>
-            <span className="text-zinc-600">&bull;</span>
-            <span className="text-zinc-400">Conceptual Understanding & Reasoning Platform</span>
+            <span className="font-display font-bold text-white tracking-tight">Clarity</span>
+            <span className="text-slate-600">&bull;</span>
+            <span className="text-slate-400">Developer Conceptual Understanding Platform</span>
           </div>
-          <div className="flex items-center gap-2 text-[11px] text-zinc-400 font-mono-code">
-            <span className="w-2 h-2 rounded-full bg-[#a3e635] shadow-[0_0_8px_rgba(163,230,53,0.6)]" />
-            <span>First-Principles Diagnostics &bull; Operational</span>
+          <div className="flex items-center gap-2 text-[11px] text-slate-400 font-mono-code">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.5)]" />
+            <span>First-Principles Engine &bull; Operational</span>
           </div>
         </div>
       </footer>

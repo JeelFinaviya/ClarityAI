@@ -56,15 +56,15 @@ export function InterviewLabPage({ onSelectTopicForExplorer }) {
     return getCategoriesForTopic(selectedTopicId);
   }, [selectedTopicId]);
 
-  // Filtered questions
+  // Filtered questions with case-insensitive robust matching
   const filteredQuestions = useMemo(() => {
     return topicQuestions.filter(q => {
       // Category filter
-      if (selectedCategory !== 'All' && q.category !== selectedCategory) {
+      if (selectedCategory !== 'All' && q.category?.toLowerCase() !== selectedCategory.toLowerCase()) {
         return false;
       }
-      // Difficulty filter
-      if (selectedDifficulty !== 'All' && q.difficulty !== selectedDifficulty) {
+      // Difficulty filter (Strict verification for Easy, Medium, Hard)
+      if (selectedDifficulty !== 'All' && q.difficulty?.toLowerCase() !== selectedDifficulty.toLowerCase()) {
         return false;
       }
       // Search query filter
@@ -78,6 +78,18 @@ export function InterviewLabPage({ onSelectTopicForExplorer }) {
       return true;
     });
   }, [topicQuestions, selectedCategory, selectedDifficulty, searchQuery]);
+
+  // Breakdown counts for difficulty filters
+  const difficultyCounts = useMemo(() => {
+    const counts = { All: topicQuestions.length, Easy: 0, Medium: 0, Hard: 0 };
+    topicQuestions.forEach(q => {
+      const diff = q.difficulty?.trim();
+      if (diff === 'Easy') counts.Easy++;
+      else if (diff === 'Medium') counts.Medium++;
+      else if (diff === 'Hard') counts.Hard++;
+    });
+    return counts;
+  }, [topicQuestions]);
 
   const toggleExpand = (id) => {
     setExpandedIds(prev => {
@@ -115,16 +127,17 @@ export function InterviewLabPage({ onSelectTopicForExplorer }) {
   };
 
   const getDifficultyBadgeColor = (difficulty) => {
-    switch (difficulty) {
-      case 'Easy':
-        return 'text-[#a3e635] bg-[#a3e635]/10 border-[#a3e635]/25';
-      case 'Medium':
-        return 'text-amber-400 bg-amber-500/10 border-amber-500/20';
-      case 'Hard':
-        return 'text-rose-400 bg-rose-500/10 border-rose-500/20';
-      default:
-        return 'text-zinc-400 bg-zinc-500/10 border-zinc-500/20';
+    const d = (difficulty || '').toLowerCase();
+    if (d === 'easy') {
+      return 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20';
     }
+    if (d === 'medium') {
+      return 'text-amber-400 bg-amber-500/10 border-amber-500/20';
+    }
+    if (d === 'hard') {
+      return 'text-rose-400 bg-rose-500/10 border-rose-500/20';
+    }
+    return 'text-slate-400 bg-slate-500/10 border-slate-500/20';
   };
 
   const formatNumber = (num) => {
@@ -137,8 +150,8 @@ export function InterviewLabPage({ onSelectTopicForExplorer }) {
         
         {/* Main Header Block */}
         <div className="flex flex-col items-center text-center space-y-3">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#ff5722]/10 border border-[#ff5722]/25 text-[#ff7a50] text-xs font-semibold tracking-wider uppercase shadow-sm">
-            <BookOpen className="w-3.5 h-3.5 text-[#a3e635]" />
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#3b82f6]/10 border border-[#3b82f6]/20 text-[#60a5fa] text-xs font-semibold uppercase tracking-wider shadow-sm">
+            <BookOpen className="w-3.5 h-3.5 text-[#3b82f6]" />
             <span>Technical Interview Library</span>
           </div>
           
@@ -146,18 +159,18 @@ export function InterviewLabPage({ onSelectTopicForExplorer }) {
             Technical Interview Library
           </h1>
           
-          <p className="text-sm sm:text-base text-zinc-300 max-w-2xl leading-relaxed">
+          <p className="text-sm sm:text-base text-slate-300 max-w-2xl leading-relaxed">
             1,100+ high-value questions across modern development, databases, APIs, and core computer science.
           </p>
         </div>
 
         {/* Topic Selector Hub */}
-        <div className="flex flex-col space-y-4 bg-[#121624] p-4 sm:p-5 rounded-2xl border border-white/10 shadow-lg">
+        <div className="flex flex-col space-y-4 bg-[#121520] p-4 sm:p-5 rounded-2xl border border-white/10 shadow-lg">
           
           {/* Domain Track Navigation Tabs */}
           <div className="flex items-center justify-between gap-2 border-b border-white/10 pb-3.5 flex-wrap">
-            <div className="flex items-center gap-1.5 text-xs font-semibold text-zinc-400">
-              <Layers className="w-3.5 h-3.5 text-[#ff5722]" />
+            <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-400">
+              <Layers className="w-3.5 h-3.5 text-[#3b82f6]" />
               <span>Domain Track:</span>
             </div>
 
@@ -169,10 +182,10 @@ export function InterviewLabPage({ onSelectTopicForExplorer }) {
                     key={group}
                     type="button"
                     onClick={() => setSelectedGroup(group)}
-                    className={`px-3 py-1 rounded-lg text-xs font-medium transition-all cursor-pointer ${
+                    className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer ${
                       isActive
-                        ? 'bg-gradient-to-r from-[#ff5722] to-[#f97316] text-white font-semibold shadow-sm'
-                        : 'bg-[#07090e]/60 text-zinc-400 hover:text-zinc-200 hover:bg-[#181d2e] border border-white/5'
+                        ? 'bg-[#3b82f6] text-white font-semibold shadow-sm'
+                        : 'bg-[#090a0f]/60 text-slate-400 hover:text-slate-200 hover:bg-[#181c2b] border border-white/5'
                     }`}
                   >
                     {group}
@@ -193,14 +206,14 @@ export function InterviewLabPage({ onSelectTopicForExplorer }) {
                   onClick={() => handleSelectTopic(topic.id)}
                   className={`flex items-center gap-1.5 px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer whitespace-nowrap active:scale-95 ${
                     isSelected
-                      ? 'bg-gradient-to-r from-[#ff5722] to-[#f97316] text-white shadow-lg shadow-orange-500/25 border border-orange-400/50 scale-[1.02]'
-                      : 'bg-[#07090e]/70 text-zinc-300 hover:text-white hover:bg-[#181d2e] border border-white/10 hover:border-white/20'
+                      ? 'bg-[#3b82f6] text-white shadow-md border border-blue-400/30'
+                      : 'bg-[#090a0f]/70 text-slate-300 hover:text-white hover:bg-[#181c2b] border border-white/10 hover:border-white/20'
                   }`}
                   title={`${topic.name}: ${topic.description}`}
                 >
                   <span>{topic.shortName || topic.name}</span>
                   <span className={`px-1.5 py-0.2 rounded-md text-[10px] font-mono-code ${
-                    isSelected ? 'bg-orange-700/60 text-orange-100' : 'bg-[#181d2e] text-[#a3e635]'
+                    isSelected ? 'bg-blue-700/60 text-white' : 'bg-[#181c2b] text-slate-400'
                   }`}>
                     {topic.questionCount}
                   </span>
@@ -211,41 +224,41 @@ export function InterviewLabPage({ onSelectTopicForExplorer }) {
         </div>
 
         {/* Active Topic Banner */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 sm:p-5 rounded-2xl bg-[#161b2c] border border-[#ff5722]/30">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 sm:p-5 rounded-2xl bg-[#121520] border border-[#3b82f6]/20">
           <div className="flex flex-col space-y-1">
             <div className="flex items-center gap-2">
-              <span className="text-xs font-mono-code font-semibold text-[#ff7a50] uppercase tracking-wider">
+              <span className="text-xs font-mono-code font-semibold text-[#3b82f6] uppercase tracking-wider">
                 {activeTopic.group} Track
               </span>
             </div>
             <h2 className="font-display text-xl sm:text-2xl font-bold text-white">
               50 High-Value {activeTopic.name} Questions
             </h2>
-            <p className="text-xs sm:text-sm text-zinc-300">
+            <p className="text-xs sm:text-sm text-slate-300">
               {activeTopic.description} &bull; Curated for technical rounds, online assessments, and internships.
             </p>
           </div>
         </div>
 
-        {/* Search & Dynamic Category Filter Suite */}
-        <div className="flex flex-col space-y-4 bg-[#121624] p-4 sm:p-5 rounded-2xl border border-white/10 shadow-lg">
+        {/* Search & Dynamic Category/Difficulty Filter Suite */}
+        <div className="flex flex-col space-y-4 bg-[#121520] p-4 sm:p-5 rounded-2xl border border-white/10 shadow-lg">
           
           {/* Search Input Row */}
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
             <div className="relative flex-1">
-              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
+              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder={`Search ${activeTopic.name} questions by keyword, concept, or scenario...`}
-                className="w-full bg-[#07090e] text-white pl-10 pr-9 py-2.5 rounded-xl border border-white/10 text-sm focus:outline-none focus:border-[#ff5722]/80 focus:ring-1 focus:ring-[#ff5722]/50 placeholder:text-zinc-500 transition-all"
+                className="w-full bg-[#090a0f] text-white pl-10 pr-9 py-2.5 rounded-xl border border-white/10 text-sm focus:outline-none focus:border-[#3b82f6] focus:ring-1 focus:ring-[#3b82f6]/40 placeholder:text-slate-500 transition-all"
               />
               {searchQuery && (
                 <button
                   type="button"
                   onClick={() => setSearchQuery('')}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-white p-0.5 rounded cursor-pointer"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white p-0.5 rounded cursor-pointer"
                   title="Clear search"
                 >
                   <X className="w-3.5 h-3.5" />
@@ -258,14 +271,14 @@ export function InterviewLabPage({ onSelectTopicForExplorer }) {
               <button
                 type="button"
                 onClick={expandAll}
-                className="px-3 py-2 text-xs font-medium text-zinc-300 hover:text-white bg-[#181d2e] hover:bg-[#1f253a] rounded-lg border border-white/10 transition-all cursor-pointer whitespace-nowrap"
+                className="px-3 py-2 text-xs font-medium text-slate-300 hover:text-white bg-[#181c2b] hover:bg-[#1e2336] rounded-lg border border-white/10 transition-all cursor-pointer whitespace-nowrap"
               >
                 Expand All
               </button>
               <button
                 type="button"
                 onClick={collapseAll}
-                className="px-3 py-2 text-xs font-medium text-zinc-300 hover:text-white bg-[#181d2e] hover:bg-[#1f253a] rounded-lg border border-white/10 transition-all cursor-pointer whitespace-nowrap"
+                className="px-3 py-2 text-xs font-medium text-slate-300 hover:text-white bg-[#181c2b] hover:bg-[#1e2336] rounded-lg border border-white/10 transition-all cursor-pointer whitespace-nowrap"
               >
                 Collapse All
               </button>
@@ -275,11 +288,11 @@ export function InterviewLabPage({ onSelectTopicForExplorer }) {
           {/* Dynamic Category Filter Pills */}
           <div className="flex flex-col space-y-2">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-medium text-zinc-400 flex items-center gap-1.5">
-                <Filter className="w-3 h-3 text-[#ff5722]" />
+              <span className="text-xs font-medium text-slate-400 flex items-center gap-1.5">
+                <Filter className="w-3 h-3 text-[#3b82f6]" />
                 Categories:
               </span>
-              <span className="text-xs text-zinc-400 font-mono-code">
+              <span className="text-xs text-slate-400 font-mono-code">
                 Showing {filteredQuestions.length} of {topicQuestions.length}
               </span>
             </div>
@@ -294,8 +307,8 @@ export function InterviewLabPage({ onSelectTopicForExplorer }) {
                     onClick={() => setSelectedCategory(cat)}
                     className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer ${
                       isActive
-                        ? 'bg-gradient-to-r from-[#ff5722] to-[#f97316] text-white font-semibold shadow-sm shadow-orange-500/30'
-                        : 'bg-[#07090e]/60 text-zinc-400 hover:text-zinc-200 hover:bg-[#181d2e] border border-white/5'
+                        ? 'bg-[#3b82f6] text-white font-semibold shadow-sm'
+                        : 'bg-[#090a0f]/60 text-slate-400 hover:text-slate-200 hover:bg-[#181c2b] border border-white/5'
                     }`}
                   >
                     {cat}
@@ -305,57 +318,67 @@ export function InterviewLabPage({ onSelectTopicForExplorer }) {
             </div>
           </div>
 
-          {/* Difficulty Filter Chips */}
-          <div className="flex items-center gap-2 pt-2 border-t border-white/5 flex-wrap">
-            <span className="text-xs font-medium text-zinc-400">Difficulty:</span>
-            {['All', 'Easy', 'Medium', 'Hard'].map((diff) => {
-              const isActive = selectedDifficulty === diff;
-              return (
-                <button
-                  key={diff}
-                  type="button"
-                  onClick={() => setSelectedDifficulty(diff)}
-                  className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all cursor-pointer ${
-                    isActive
-                      ? 'bg-zinc-200 text-zinc-900 font-semibold shadow-sm'
-                      : 'bg-[#07090e]/40 text-zinc-400 hover:text-zinc-200 hover:bg-[#181d2e] border border-white/5'
-                  }`}
-                >
-                  {diff}
-                </button>
-              );
-            })}
+          {/* Segmented Control Difficulty Filter Bar */}
+          <div className="flex items-center justify-between pt-2 border-t border-white/5 flex-wrap gap-3">
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-semibold text-slate-400">Difficulty Level:</span>
+              <div className="inline-flex p-1 rounded-xl bg-[#090a0f] border border-white/10 gap-1">
+                {['All', 'Easy', 'Medium', 'Hard'].map((diff) => {
+                  const isActive = selectedDifficulty === diff;
+                  const count = difficultyCounts[diff];
+                  return (
+                    <button
+                      key={diff}
+                      type="button"
+                      onClick={() => setSelectedDifficulty(diff)}
+                      className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
+                        isActive
+                          ? 'bg-[#3b82f6] text-white shadow-sm'
+                          : 'text-slate-400 hover:text-slate-200 hover:bg-[#181c2b]'
+                      }`}
+                    >
+                      <span>{diff}</span>
+                      <span className={`text-[10px] font-mono-code px-1 rounded ${
+                        isActive ? 'bg-blue-700/60 text-white' : 'bg-[#181c2b] text-slate-500'
+                      }`}>
+                        {count}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
 
             {(selectedCategory !== 'All' || selectedDifficulty !== 'All' || searchQuery) && (
               <button
                 type="button"
                 onClick={handleResetFilters}
-                className="ml-auto text-xs text-[#ff7a50] hover:text-[#ff5722] underline cursor-pointer"
+                className="text-xs text-[#3b82f6] hover:text-blue-400 underline cursor-pointer transition-colors"
               >
-                Reset Filters
+                Reset All Filters
               </button>
             )}
           </div>
         </div>
 
-        {/* Questions List */}
+        {/* Questions List with Smooth Layout Transitions */}
         {filteredQuestions.length === 0 ? (
-          <div className="w-full py-16 px-4 flex flex-col items-center justify-center text-center bg-[#121624] rounded-2xl border border-white/5">
-            <Layers className="w-10 h-10 text-zinc-600 mb-3" />
-            <h3 className="text-lg font-semibold text-zinc-200 mb-1">No questions match your filter</h3>
-            <p className="text-sm text-zinc-400 max-w-sm mb-4">
+          <div className="w-full py-16 px-4 flex flex-col items-center justify-center text-center bg-[#121520] rounded-2xl border border-white/5">
+            <Layers className="w-10 h-10 text-slate-600 mb-3" />
+            <h3 className="text-lg font-semibold text-slate-200 mb-1">No questions match your filter</h3>
+            <p className="text-sm text-slate-400 max-w-sm mb-4">
               Try adjusting your search keyword or switching category and difficulty filters.
             </p>
             <button
               type="button"
               onClick={handleResetFilters}
-              className="px-4 py-2 bg-gradient-to-r from-[#ff5722] to-[#f97316] hover:from-[#ff6b3a] hover:to-[#ff5722] text-white text-xs font-semibold rounded-xl transition-all shadow-md cursor-pointer"
+              className="px-4 py-2 bg-[#3b82f6] hover:bg-[#2563eb] text-white text-xs font-semibold rounded-xl transition-all shadow-md cursor-pointer"
             >
               Reset All Filters
             </button>
           </div>
         ) : (
-          <div className="w-full flex flex-col space-y-3.5">
+          <div className="w-full flex flex-col space-y-3.5 transition-layout">
             {filteredQuestions.map((q) => {
               const isExpanded = expandedIds.has(q.id);
               const isCopied = copiedId === q.id;
@@ -363,7 +386,7 @@ export function InterviewLabPage({ onSelectTopicForExplorer }) {
               return (
                 <div
                   key={q.id}
-                  className="w-full bg-[#121624] rounded-2xl border border-white/10 hover:border-[#ff5722]/35 transition-all duration-200 overflow-hidden shadow-md group"
+                  className="w-full bg-[#121520] rounded-2xl border border-white/10 hover:border-[#3b82f6]/40 transition-all duration-200 overflow-hidden shadow-sm group"
                 >
                   {/* Card Header & Question Clickable Row */}
                   <div
@@ -372,19 +395,19 @@ export function InterviewLabPage({ onSelectTopicForExplorer }) {
                   >
                     {/* Left: Number + Question */}
                     <div className="flex items-start gap-3 sm:gap-4 flex-1 min-w-0">
-                      <span className="font-mono-code text-xs sm:text-sm font-bold text-[#ff7a50] bg-[#ff5722]/10 border border-[#ff5722]/20 px-2 sm:px-2.5 py-1 rounded-lg shrink-0">
+                      <span className="font-mono-code text-xs sm:text-sm font-bold text-[#3b82f6] bg-[#3b82f6]/10 border border-[#3b82f6]/20 px-2 sm:px-2.5 py-1 rounded-lg shrink-0">
                         {formatNumber(q.id)}
                       </span>
 
                       <div className="flex flex-col space-y-1.5 flex-1 min-w-0">
-                        <h3 className="text-sm sm:text-base font-semibold text-white group-hover:text-orange-200 transition-colors leading-snug">
+                        <h3 className="text-sm sm:text-base font-semibold text-white group-hover:text-blue-200 transition-colors leading-snug">
                           {q.question}
                         </h3>
 
-                        {/* Badges on mobile/collapsed */}
+                        {/* Badges */}
                         <div className="flex items-center gap-2 flex-wrap pt-0.5">
                           {q.category && (
-                            <span className="text-[11px] font-medium px-2 py-0.5 rounded-full border text-[#ff7a50] bg-[#ff5722]/10 border-[#ff5722]/20">
+                            <span className="text-[11px] font-medium px-2 py-0.5 rounded-full border text-slate-300 bg-slate-800/80 border-white/10">
                               {q.category}
                             </span>
                           )}
@@ -403,17 +426,17 @@ export function InterviewLabPage({ onSelectTopicForExplorer }) {
                           e.stopPropagation();
                           handleCopy(q);
                         }}
-                        className="p-1.5 text-zinc-400 hover:text-white hover:bg-[#181d2e] rounded-lg border border-transparent hover:border-white/10 transition-all cursor-pointer"
+                        className="p-1.5 text-slate-400 hover:text-white hover:bg-[#181c2b] rounded-lg border border-transparent hover:border-white/10 transition-all cursor-pointer"
                         title="Copy question and explanation"
                       >
                         {isCopied ? (
-                          <Check className="w-4 h-4 text-[#a3e635]" />
+                          <Check className="w-4 h-4 text-emerald-400" />
                         ) : (
                           <Copy className="w-4 h-4" />
                         )}
                       </button>
 
-                      <div className="p-1 text-zinc-400 group-hover:text-zinc-200 transition-colors">
+                      <div className="p-1 text-slate-400 group-hover:text-slate-200 transition-colors">
                         {isExpanded ? (
                           <ChevronUp className="w-4 h-4" />
                         ) : (
@@ -425,17 +448,17 @@ export function InterviewLabPage({ onSelectTopicForExplorer }) {
 
                   {/* Expanded Content Section */}
                   {isExpanded && (
-                    <div className="px-4 pb-4 sm:px-5 sm:pb-5 pt-0 border-t border-white/5 bg-[#07090e]/50">
-                      <div className="mt-3.5 p-3.5 sm:p-4 rounded-xl bg-[#0a0d16] border-l-2 border-[#ff5722] text-xs sm:text-sm text-zinc-300 leading-relaxed">
+                    <div className="px-4 pb-4 sm:px-5 sm:pb-5 pt-0 border-t border-white/5 bg-[#090a0f]/60">
+                      <div className="mt-3.5 p-3.5 sm:p-4 rounded-xl bg-[#0e1017] border-l-2 border-[#3b82f6] text-xs sm:text-sm text-slate-300 leading-relaxed">
                         <div className="flex items-center justify-between mb-2">
-                          <span className="text-[11px] font-semibold uppercase tracking-wider text-zinc-400 font-mono-code">
+                          <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 font-mono-code">
                             Key Interview Explanation
                           </span>
                           {onSelectTopicForExplorer && (
                             <button
                               type="button"
                               onClick={() => onSelectTopicForExplorer(`${activeTopic.name}: ${q.question}`)}
-                              className="text-[11px] text-[#ff7a50] hover:text-[#ff5722] font-medium flex items-center gap-1 cursor-pointer transition-colors"
+                              className="text-[11px] text-[#3b82f6] hover:text-blue-400 font-medium flex items-center gap-1 cursor-pointer transition-colors"
                               title="Deep dive into this concept with ClarityAI"
                             >
                               <span>Explore in Concept Explorer</span>
@@ -443,7 +466,7 @@ export function InterviewLabPage({ onSelectTopicForExplorer }) {
                             </button>
                           )}
                         </div>
-                        <p className="text-zinc-200">
+                        <p className="text-slate-200">
                           {q.explanation}
                         </p>
                       </div>
@@ -457,7 +480,7 @@ export function InterviewLabPage({ onSelectTopicForExplorer }) {
 
         {/* Footer Note */}
         <div className="w-full text-center pt-6 border-t border-white/10">
-          <p className="text-xs text-zinc-400">
+          <p className="text-xs text-slate-400">
             Interview Lab provides structured technical interview preparation across 22 technologies (1,100 curated questions).
           </p>
         </div>

@@ -41,9 +41,9 @@ export function ConfidencePage({
 
   const getDialColor = (val) => {
     if (val < 40) return 'text-amber-400';
-    if (val < 70) return 'text-orange-400';
-    if (val < 85) return 'text-[#ff5722]';
-    return 'text-[#a3e635]';
+    if (val < 70) return 'text-slate-200';
+    if (val < 85) return 'text-[#3b82f6]';
+    return 'text-emerald-400';
   };
 
   return (
@@ -52,25 +52,25 @@ export function ConfidencePage({
         
         {/* Stage Header */}
         <div className="text-center">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#a3e635]/10 border border-[#a3e635]/30 text-[#a3e635] text-xs font-semibold mb-3">
-            <Zap className="w-3.5 h-3.5 text-[#a3e635]" />
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#3b82f6]/10 border border-[#3b82f6]/20 text-[#60a5fa] text-xs font-semibold mb-3">
+            <Zap className="w-3.5 h-3.5 text-[#3b82f6]" />
             <span>Stage 2 of 3: Calibrate Your Conviction</span>
           </div>
           <h1 className="font-display text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
             How confident are you?
           </h1>
-          <p className="text-zinc-400 text-sm mt-2 max-w-lg mx-auto">
-            ClarityAI calculates your <strong className="text-zinc-200 font-semibold">Calibration Index</strong> by comparing your stated conviction against your actual demonstrated depth.
+          <p className="text-slate-300 text-sm mt-2 max-w-lg mx-auto">
+            ClarityAI calculates your <strong className="text-white font-semibold">Calibration Index</strong> by comparing your stated conviction against your actual demonstrated depth.
           </p>
         </div>
 
         {/* Card */}
-        <div className="glass-card rounded-2xl p-6 sm:p-8 flex flex-col gap-8 border border-white/10 shadow-2xl">
+        <div className="glass-card rounded-2xl p-6 sm:p-8 flex flex-col gap-8 border border-white/10 shadow-xl">
           
           {/* Target Topic Pill */}
-          <div className="flex items-center justify-between p-3.5 rounded-xl bg-[#07090e]/80 border border-white/5">
-            <span className="text-xs text-zinc-400 font-medium">Concept Under Test:</span>
-            <span className="text-sm font-bold text-[#ff7a50] font-display">{topic || 'Selected Concept'}</span>
+          <div className="flex items-center justify-between p-3.5 rounded-xl bg-[#090a0f] border border-white/5">
+            <span className="text-xs text-slate-400 font-medium">Concept Under Test:</span>
+            <span className="text-sm font-bold text-[#3b82f6] font-display">{topic || 'Selected Concept'}</span>
           </div>
 
           {/* Interactive Confidence Dial / Display */}
@@ -79,7 +79,7 @@ export function ConfidencePage({
               <span className={`font-display text-6xl sm:text-7xl font-extrabold tracking-tight font-mono-code ${getDialColor(confidence)}`}>
                 {confidence}%
               </span>
-              <div className="text-xs font-semibold uppercase tracking-wider text-zinc-400 mt-1">
+              <div className="text-xs font-semibold uppercase tracking-wider text-slate-400 mt-1">
                 Stated Conviction
               </div>
             </div>
@@ -95,7 +95,7 @@ export function ConfidencePage({
                 onChange={(e) => setConfidence(Number(e.target.value))}
                 className="w-full"
               />
-              <div className="flex justify-between text-[11px] font-mono-code text-zinc-500">
+              <div className="flex justify-between text-[11px] font-mono-code text-slate-500">
                 <span>5% (Shaky)</span>
                 <span>50% (Moderate)</span>
                 <span>100% (Certain)</span>
@@ -113,14 +113,14 @@ export function ConfidencePage({
                   onClick={() => setConfidence(t.value)}
                   className={`p-4 rounded-xl border transition-all cursor-pointer flex flex-col justify-between ${
                     isSelected
-                      ? 'bg-[#ff5722]/20 border-[#ff5722] shadow-md shadow-orange-500/20 scale-[1.02]'
-                      : 'bg-[#07090e]/60 hover:bg-[#181d2e] border-white/5 hover:border-white/15'
+                      ? 'bg-[#3b82f6]/10 border-[#3b82f6] shadow-sm scale-[1.02]'
+                      : 'bg-[#090a0f]/80 hover:bg-[#181c2b] border-white/5 hover:border-white/15'
                   }`}
                 >
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-xl">{t.icon}</span>
                     <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${
-                      isSelected ? 'bg-[#ff5722] text-white' : 'bg-[#181d2e] text-zinc-400'
+                      isSelected ? 'bg-[#3b82f6] text-white' : 'bg-[#181c2b] text-slate-400'
                     }`}>
                       {t.badge}
                     </span>
@@ -128,7 +128,7 @@ export function ConfidencePage({
                   <div className="font-display text-sm font-bold text-white mb-1">
                     {t.label}
                   </div>
-                  <div className="text-[11px] text-zinc-400 leading-tight">
+                  <div className="text-[11px] text-slate-400 leading-tight">
                     {t.desc}
                   </div>
                 </div>
@@ -141,7 +141,7 @@ export function ConfidencePage({
             <button
               type="button"
               onClick={onBack}
-              className="px-4 py-2.5 rounded-xl bg-[#121624] hover:bg-[#181d2e] text-zinc-300 text-xs font-semibold transition-all cursor-pointer"
+              className="px-4 py-2.5 rounded-xl bg-[#121520] hover:bg-[#181c2b] text-slate-300 text-xs font-semibold transition-all cursor-pointer"
             >
               ← Back
             </button>
@@ -149,7 +149,7 @@ export function ConfidencePage({
             <button
               type="button"
               onClick={onContinue}
-              className="px-6 py-3 rounded-xl bg-gradient-to-r from-[#ff5722] via-[#f97316] to-[#a3e635] text-white font-display text-sm font-bold shadow-lg shadow-orange-500/30 hover:scale-105 active:scale-95 transition-all flex items-center gap-2 cursor-pointer"
+              className="px-6 py-3 rounded-xl bg-[#3b82f6] hover:bg-[#2563eb] text-white font-display text-sm font-bold shadow-md hover:scale-105 active:scale-95 transition-all flex items-center gap-2 cursor-pointer"
             >
               <span>Evaluate Understanding</span>
               <ArrowRight className="w-4 h-4" />

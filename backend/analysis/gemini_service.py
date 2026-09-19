@@ -379,12 +379,18 @@ def _get_api_key() -> str:
 
 
 def _get_candidate_models() -> list[str]:
-    """Returns the configured Gemini model only."""
+    """Returns candidate Gemini models with automatic fallbacks."""
     configured = os.getenv('GEMINI_MODEL') or getattr(
         settings, 'GEMINI_MODEL', 'gemini-3.6-flash'
     )
     configured = configured.strip("'\" \t\n\r")
-    return [configured]
+    candidates = []
+    if configured:
+        candidates.append(configured)
+    for model in ['gemini-3.6-flash', 'gemini-3.5-flash', 'gemini-3.1-flash-lite']:
+        if model not in candidates:
+            candidates.append(model)
+    return candidates
 
 
 
