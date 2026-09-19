@@ -100,20 +100,20 @@ export function MCQAssessmentPage({
     const diff = (difficulty || 'medium').toLowerCase();
     if (diff === 'easy') {
       return (
-        <span className="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-500/10 text-emerald-300 border border-emerald-500/20">
+        <span className="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-[#a3e635]/10 text-[#a3e635] border border-[#a3e635]/25">
           Easy
         </span>
       );
     }
     if (diff === 'hard') {
       return (
-        <span className="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-purple-500/10 text-purple-300 border border-purple-500/20">
+        <span className="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-rose-500/10 text-rose-300 border border-rose-500/20">
           Deep Reasoning
         </span>
       );
     }
     return (
-      <span className="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-indigo-500/10 text-indigo-300 border border-indigo-500/20">
+      <span className="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-[#ff5722]/10 text-[#ff7a50] border border-[#ff5722]/20">
         Mechanistic
       </span>
     );
@@ -132,8 +132,8 @@ export function MCQAssessmentPage({
         {/* Top Navigation & Status Bar */}
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 text-xs font-semibold">
-              <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#ff5722]/10 border border-[#ff5722]/30 text-[#ff7a50] text-xs font-semibold">
+              <Sparkles className="w-3.5 h-3.5 text-[#a3e635]" />
               <span>Targeted Diagnostic Assessment</span>
             </div>
           </div>
@@ -141,7 +141,7 @@ export function MCQAssessmentPage({
           <button
             type="button"
             onClick={onSkip}
-            className="text-xs text-slate-400 hover:text-white transition-colors flex items-center gap-1.5 cursor-pointer font-medium"
+            className="text-xs text-zinc-400 hover:text-white transition-colors flex items-center gap-1.5 cursor-pointer font-medium"
           >
             <span>Skip & Finalize Score</span>
             <ArrowRight className="w-3.5 h-3.5" />
@@ -155,19 +155,19 @@ export function MCQAssessmentPage({
               <span className="font-display font-bold text-white text-sm">
                 Question {currentIndex + 1}
               </span>
-              <span className="text-slate-500">of</span>
-              <span className="text-slate-400 font-medium">{totalQuestions}</span>
+              <span className="text-zinc-500">of</span>
+              <span className="text-zinc-400 font-medium">{totalQuestions}</span>
             </div>
             
-            <div className="flex items-center gap-2 font-mono-code text-[11px] text-slate-400">
+            <div className="flex items-center gap-2 font-mono-code text-[11px] text-zinc-400">
               <span>{answeredCount}/{totalQuestions} Answered</span>
             </div>
           </div>
 
           {/* Progress Bar Track */}
-          <div className="w-full h-2 rounded-full bg-slate-900/80 border border-white/5 overflow-hidden">
+          <div className="w-full h-2 rounded-full bg-[#07090e]/80 border border-white/5 overflow-hidden">
             <div 
-              className="h-full bg-gradient-to-r from-indigo-500 via-purple-500 to-cyan-400 transition-all duration-300 rounded-full"
+              className="h-full bg-gradient-to-r from-[#ff5722] via-[#f97316] to-[#a3e635] transition-all duration-300 rounded-full"
               style={{ width: `${progressPercent}%` }}
             />
           </div>
@@ -179,7 +179,7 @@ export function MCQAssessmentPage({
           {/* Metadata Row */}
           <div className="flex items-center justify-between flex-wrap gap-2 pb-2 border-b border-white/5">
             <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-xs font-semibold text-slate-400">
+              <span className="text-xs font-semibold text-zinc-400">
                 Concept: <strong className="text-white">{currentQuestion.concept || topic}</strong>
               </span>
             </div>
@@ -189,7 +189,7 @@ export function MCQAssessmentPage({
           </div>
 
           {/* Question Text */}
-          <div className="bg-slate-900/90 rounded-2xl p-5 sm:p-7 border border-white/10 shadow-inner">
+          <div className="bg-[#07090e]/90 rounded-2xl p-5 sm:p-7 border border-white/10 shadow-inner">
             <h2 className="font-display text-lg sm:text-xl lg:text-2xl font-bold text-white leading-relaxed tracking-tight">
               {currentQuestion.question}
             </h2>
@@ -208,23 +208,23 @@ export function MCQAssessmentPage({
                   onClick={() => handleSelectOption(idx)}
                   className={`w-full p-4 sm:p-4.5 rounded-xl border text-left transition-all flex items-start gap-3.5 cursor-pointer group ${
                     isSelected
-                      ? 'bg-gradient-to-r from-indigo-950/80 to-purple-950/60 border-indigo-500 text-white ring-2 ring-indigo-500/30 shadow-lg shadow-indigo-500/10'
-                      : 'bg-slate-900/70 hover:bg-slate-850 border-white/5 hover:border-white/15 text-slate-300'
+                      ? 'bg-gradient-to-r from-[#ff5722]/20 to-[#f97316]/10 border-[#ff5722] text-white ring-2 ring-[#ff5722]/30 shadow-lg shadow-orange-500/10'
+                      : 'bg-[#07090e]/70 hover:bg-[#181d2e] border-white/5 hover:border-white/15 text-zinc-300'
                   }`}
                 >
                   {/* Option Letter Pill */}
                   <div
                     className={`w-7 h-7 rounded-lg flex items-center justify-center text-xs font-bold shrink-0 transition-all mt-0.5 ${
                       isSelected
-                        ? 'bg-indigo-500 text-white shadow-md'
-                        : 'bg-slate-800 text-slate-400 group-hover:bg-slate-700 group-hover:text-white'
+                        ? 'bg-[#ff5722] text-white shadow-md'
+                        : 'bg-[#181d2e] text-zinc-400 group-hover:bg-[#1f253a] group-hover:text-white'
                     }`}
                   >
                     {label}
                   </div>
 
                   {/* Option Text */}
-                  <span className={`text-sm sm:text-base leading-relaxed flex-1 ${isSelected ? 'text-white font-medium' : 'text-slate-300'}`}>
+                  <span className={`text-sm sm:text-base leading-relaxed flex-1 ${isSelected ? 'text-white font-medium' : 'text-zinc-300'}`}>
                     {optionText}
                   </span>
 
@@ -232,11 +232,11 @@ export function MCQAssessmentPage({
                   <div
                     className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 border transition-all mt-1 ${
                       isSelected
-                        ? 'border-cyan-400 bg-cyan-400/20 text-cyan-300'
-                        : 'border-slate-700 bg-slate-900/50'
+                        ? 'border-[#a3e635] bg-[#a3e635]/20 text-[#a3e635]'
+                        : 'border-zinc-700 bg-[#07090e]/50'
                     }`}
                   >
-                    {isSelected && <div className="w-2 h-2 rounded-full bg-cyan-300" />}
+                    {isSelected && <div className="w-2 h-2 rounded-full bg-[#a3e635]" />}
                   </div>
                 </button>
               );
@@ -245,12 +245,12 @@ export function MCQAssessmentPage({
 
           {/* Completion Banner on Final Question */}
           {isLastQuestion && isAllAnswered && (
-            <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs flex items-center justify-between gap-3 animate-fade-in">
+            <div className="p-4 rounded-xl bg-[#a3e635]/10 border border-[#a3e635]/30 text-[#a3e635] text-xs flex items-center justify-between gap-3 animate-fade-in">
               <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                <CheckCircle2 className="w-4 h-4 text-[#a3e635] shrink-0" />
                 <span className="font-semibold">Assessment Complete &bull; {totalQuestions} of {totalQuestions} questions answered</span>
               </div>
-              <span className="text-[11px] text-emerald-400/80 hidden sm:inline">Ready to evaluate</span>
+              <span className="text-[11px] text-[#a3e635]/80 hidden sm:inline">Ready to evaluate</span>
             </div>
           )}
 
@@ -263,8 +263,8 @@ export function MCQAssessmentPage({
               disabled={currentIndex === 0}
               className={`px-4 py-2.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all ${
                 currentIndex > 0
-                  ? 'bg-slate-800/80 hover:bg-slate-700/80 text-slate-300 cursor-pointer'
-                  : 'opacity-40 bg-slate-900 text-slate-600 cursor-not-allowed border border-white/5'
+                  ? 'bg-[#121624] hover:bg-[#181d2e] text-zinc-300 cursor-pointer'
+                  : 'opacity-40 bg-[#07090e] text-zinc-600 cursor-not-allowed border border-white/5'
               }`}
             >
               <ArrowLeft className="w-3.5 h-3.5" />
@@ -279,8 +279,8 @@ export function MCQAssessmentPage({
                 disabled={!hasSelectedCurrent}
                 className={`px-6 py-2.5 rounded-xl font-display text-xs sm:text-sm font-bold flex items-center gap-2 transition-all ${
                   hasSelectedCurrent
-                    ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-md shadow-indigo-500/20 hover:scale-105 active:scale-95 cursor-pointer'
-                    : 'bg-slate-800/50 text-slate-500 cursor-not-allowed border border-white/5'
+                    ? 'bg-gradient-to-r from-[#ff5722] to-[#f97316] text-white shadow-md shadow-orange-500/20 hover:scale-105 active:scale-95 cursor-pointer'
+                    : 'bg-[#121624] text-zinc-500 cursor-not-allowed border border-white/5'
                 }`}
               >
                 <span>Next Question</span>
@@ -293,8 +293,8 @@ export function MCQAssessmentPage({
                 disabled={!isAllAnswered || isSubmitting}
                 className={`px-8 py-3 rounded-xl font-display text-sm font-bold flex items-center gap-2 transition-all shadow-xl ${
                   isAllAnswered && !isSubmitting
-                    ? 'bg-gradient-to-r from-indigo-600 via-purple-600 to-cyan-500 text-white shadow-indigo-500/30 hover:scale-105 active:scale-95 cursor-pointer'
-                    : 'bg-slate-800 text-slate-500 cursor-not-allowed border border-white/5'
+                    ? 'bg-gradient-to-r from-[#ff5722] via-[#f97316] to-[#a3e635] text-white shadow-orange-500/30 hover:scale-105 active:scale-95 cursor-pointer'
+                    : 'bg-[#121624] text-zinc-500 cursor-not-allowed border border-white/5'
                 }`}
               >
                 <span>{isSubmitting ? 'Evaluating Assessment...' : 'Submit Assessment'}</span>

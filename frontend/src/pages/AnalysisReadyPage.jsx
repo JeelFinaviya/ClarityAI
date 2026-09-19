@@ -234,20 +234,20 @@ export function AnalysisReadyPage({
   if (mode === 'loading_initial' || mode === 'loading_mcq' || mode === 'loading_synthesis') {
     return (
       <div className="w-full flex-1 flex flex-col items-center justify-center arena-bg-radial px-4 py-16 text-center">
-        <div className="w-full max-w-lg glass-card rounded-3xl p-8 sm:p-10 border border-indigo-500/30 shadow-2xl flex flex-col items-center">
+        <div className="w-full max-w-lg glass-card rounded-3xl p-8 sm:p-10 border border-[#ff5722]/30 shadow-2xl flex flex-col items-center">
           
           {/* Animated Glowing Ring */}
           <div className="relative w-20 h-20 mb-6 flex items-center justify-center">
-            <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-indigo-500 via-purple-500 to-cyan-400 animate-spin blur-sm opacity-70" />
-            <div className="relative w-16 h-16 rounded-full bg-slate-950 flex items-center justify-center border border-white/10">
-              <Sparkles className="w-8 h-8 text-cyan-400 animate-pulse" />
+            <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-[#ff5722] via-[#ff7a50] to-[#a3e635] animate-spin blur-sm opacity-80" />
+            <div className="relative w-16 h-16 rounded-full bg-[#07090e] flex items-center justify-center border border-white/10">
+              <Sparkles className="w-8 h-8 text-[#a3e635] animate-pulse" />
             </div>
           </div>
 
           <h2 className="font-display text-2xl font-bold text-white mb-2">
             {loadingTitle}
           </h2>
-          <p className="text-xs text-slate-400 mb-8 max-w-xs">
+          <p className="text-xs text-zinc-400 mb-8 max-w-xs">
             {loadingSubtitle}
           </p>
 
@@ -261,20 +261,20 @@ export function AnalysisReadyPage({
                   key={step.label}
                   className={`flex items-center gap-3 p-3 rounded-xl border text-left transition-all ${
                     isCurrent
-                      ? 'bg-indigo-600/20 border-indigo-500 text-white shadow-md'
+                      ? 'bg-[#ff5722]/20 border-[#ff5722] text-white shadow-md'
                       : isDone
-                      ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300'
-                      : 'bg-slate-900/40 border-white/5 text-slate-500'
+                      ? 'bg-[#a3e635]/10 border-[#a3e635]/30 text-[#a3e635]'
+                      : 'bg-[#07090e]/40 border-white/5 text-zinc-500'
                   }`}
                 >
                   <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shrink-0 ${
-                    isDone ? 'bg-emerald-500 text-slate-950' : isCurrent ? 'bg-indigo-500 text-white animate-pulse' : 'bg-slate-800 text-slate-600'
+                    isDone ? 'bg-[#a3e635] text-[#07090e]' : isCurrent ? 'bg-[#ff5722] text-white animate-pulse' : 'bg-[#181d2e] text-zinc-600'
                   }`}>
                     {isDone ? '✓' : idx + 1}
                   </div>
                   <div className="flex flex-col">
                     <span className="text-xs font-bold leading-none">{step.label}</span>
-                    <span className="text-[10px] text-slate-400 mt-1">{step.desc}</span>
+                    <span className="text-[10px] text-zinc-400 mt-1">{step.desc}</span>
                   </div>
                 </div>
               );
@@ -293,14 +293,14 @@ export function AnalysisReadyPage({
         
         {/* Header */}
         <div className="text-center">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs font-semibold mb-3">
-            <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#a3e635]/10 border border-[#a3e635]/30 text-[#a3e635] text-xs font-semibold mb-3">
+            <ShieldCheck className="w-3.5 h-3.5 text-[#a3e635]" />
             <span>Ready for Evaluation</span>
           </div>
           <h1 className="font-display text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
             Review & Start Evaluation
           </h1>
-          <p className="text-slate-400 text-sm mt-2 max-w-md mx-auto">
+          <p className="text-zinc-400 text-sm mt-2 max-w-md mx-auto">
             Your argument and stated conviction are locked in. Start the evaluation to begin your targeted assessment.
           </p>
         </div>
@@ -326,23 +326,23 @@ export function AnalysisReadyPage({
         <div className="glass-card rounded-2xl p-6 sm:p-8 flex flex-col gap-6 border border-white/10 shadow-2xl">
           
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="p-4 rounded-xl bg-slate-900/80 border border-white/5">
-              <span className="text-xs text-slate-400 uppercase tracking-wider font-semibold block mb-1">Target Concept</span>
+            <div className="p-4 rounded-xl bg-[#07090e]/80 border border-white/5">
+              <span className="text-xs text-zinc-400 uppercase tracking-wider font-semibold block mb-1">Target Concept</span>
               <span className="font-display text-lg font-bold text-white">{topic}</span>
             </div>
 
-            <div className="p-4 rounded-xl bg-slate-900/80 border border-white/5">
-              <span className="text-xs text-slate-400 uppercase tracking-wider font-semibold block mb-1">Stated Conviction</span>
-              <span className="font-display text-lg font-bold text-indigo-400 font-mono-code">{confidence}%</span>
+            <div className="p-4 rounded-xl bg-[#07090e]/80 border border-white/5">
+              <span className="text-xs text-zinc-400 uppercase tracking-wider font-semibold block mb-1">Stated Conviction</span>
+              <span className="font-display text-lg font-bold text-[#ff7a50] font-mono-code">{confidence}%</span>
             </div>
           </div>
 
-          <div className="p-5 rounded-xl bg-slate-900/80 border border-white/5 flex flex-col gap-2">
-            <div className="flex items-center justify-between text-xs text-slate-400">
+          <div className="p-5 rounded-xl bg-[#07090e]/80 border border-white/5 flex flex-col gap-2">
+            <div className="flex items-center justify-between text-xs text-zinc-400">
               <span className="font-semibold uppercase tracking-wider">Your Articulated Argument</span>
               <span className="font-mono-code">{wordCount} words</span>
             </div>
-            <p className="text-sm text-slate-300 leading-relaxed max-h-48 overflow-y-auto pr-2">
+            <p className="text-sm text-zinc-300 leading-relaxed max-h-48 overflow-y-auto pr-2">
               "{explanation}"
             </p>
           </div>
@@ -352,7 +352,7 @@ export function AnalysisReadyPage({
             <button
               type="button"
               onClick={onEdit}
-              className="px-4 py-2.5 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 text-slate-300 text-xs font-semibold transition-all cursor-pointer"
+              className="px-4 py-2.5 rounded-xl bg-[#121624] hover:bg-[#181d2e] text-zinc-300 text-xs font-semibold transition-all cursor-pointer"
             >
               ← Edit Details
             </button>
@@ -360,9 +360,9 @@ export function AnalysisReadyPage({
             <button
               type="button"
               onClick={handleInitialAnalyze}
-              className="px-8 py-3.5 rounded-xl bg-gradient-to-r from-indigo-600 via-purple-600 to-cyan-500 text-white font-display text-sm font-bold shadow-xl shadow-indigo-500/30 hover:scale-105 active:scale-95 transition-all flex items-center gap-2 cursor-pointer"
+              className="px-8 py-3.5 rounded-xl bg-gradient-to-r from-[#ff5722] via-[#f97316] to-[#a3e635] text-white font-display text-sm font-bold shadow-xl shadow-orange-500/30 hover:scale-105 active:scale-95 transition-all flex items-center gap-2 cursor-pointer"
             >
-              <Sparkles className="w-4 h-4 text-cyan-200" />
+              <Sparkles className="w-4 h-4 text-orange-200" />
               <span>Start Evaluation</span>
               <ArrowRight className="w-4 h-4" />
             </button>
@@ -374,4 +374,3 @@ export function AnalysisReadyPage({
     </div>
   );
 }
-

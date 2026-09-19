@@ -41,15 +41,15 @@ export function DiagnosticProbePage({
         
         {/* Header Bar */}
         <div className="flex items-center justify-between">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 text-xs font-semibold">
-            <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#ff5722]/10 border border-[#ff5722]/30 text-[#ff7a50] text-xs font-semibold">
+            <Sparkles className="w-3.5 h-3.5 text-[#a3e635]" />
             <span>Targeted Mechanism Inquiry</span>
           </div>
 
           <button
             type="button"
             onClick={onSkip}
-            className="text-xs text-slate-400 hover:text-white transition-colors flex items-center gap-1.5 cursor-pointer font-medium"
+            className="text-xs text-zinc-400 hover:text-white transition-colors flex items-center gap-1.5 cursor-pointer font-medium"
           >
             <span>Skip & Finalize Score</span>
             <ArrowRight className="w-3.5 h-3.5" />
@@ -61,17 +61,17 @@ export function DiagnosticProbePage({
           
           {/* Target Concept Pill */}
           <div className="flex items-center justify-between flex-wrap gap-2">
-            <span className="text-xs font-semibold text-slate-400">
+            <span className="text-xs font-semibold text-zinc-400">
               Target Concept: <strong className="text-white font-bold">{topic}</strong>
             </span>
-            <span className="px-2.5 py-1 rounded-lg text-xs font-semibold bg-cyan-500/10 text-cyan-300 border border-cyan-500/20 flex items-center gap-1.5">
+            <span className="px-2.5 py-1 rounded-lg text-xs font-semibold bg-[#a3e635]/10 text-[#a3e635] border border-[#a3e635]/25 flex items-center gap-1.5">
               <span>Investigating Mechanism Depth</span>
             </span>
           </div>
 
           {/* The Question Box */}
-          <div className="bg-slate-900/90 rounded-2xl p-6 sm:p-7 border border-white/10 shadow-inner">
-            <div className="text-xs font-bold uppercase tracking-wider text-indigo-400 mb-2">
+          <div className="bg-[#07090e]/90 rounded-2xl p-6 sm:p-7 border border-white/10 shadow-inner">
+            <div className="text-xs font-bold uppercase tracking-wider text-[#ff7a50] mb-2">
               Specific Mechanism Question:
             </div>
             <h2 className="font-display text-xl sm:text-2xl lg:text-3xl font-bold text-white leading-relaxed tracking-tight">
@@ -80,7 +80,7 @@ export function DiagnosticProbePage({
           </div>
 
           {/* Why This Matters Box */}
-          <div className="p-4 rounded-xl bg-slate-900/50 border border-white/5 flex items-start gap-3 text-xs text-slate-300 leading-relaxed">
+          <div className="p-4 rounded-xl bg-[#07090e]/50 border border-white/5 flex items-start gap-3 text-xs text-zinc-300 leading-relaxed">
             <Lightbulb className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
             <div>
               <strong className="text-white font-semibold">Why this question? </strong>
@@ -92,10 +92,10 @@ export function DiagnosticProbePage({
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             <div className="flex flex-col gap-2">
               <div className="flex items-center justify-between">
-                <label className="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
+                <label className="text-xs font-bold uppercase tracking-wider text-zinc-300 flex items-center gap-1.5">
                   <span>Your Causal Explanation</span>
                 </label>
-                <span className={`text-xs font-mono-code font-bold ${isAnswerSufficient ? 'text-emerald-400' : 'text-slate-500'}`}>
+                <span className={`text-xs font-mono-code font-bold ${isAnswerSufficient ? 'text-[#a3e635]' : 'text-zinc-500'}`}>
                   {wordCount} words (min. {minWords})
                 </span>
               </div>
@@ -108,7 +108,7 @@ export function DiagnosticProbePage({
                   if (error) setError('');
                 }}
                 placeholder="Explain the specific step-by-step mechanism here..."
-                className="w-full p-4 rounded-xl bg-slate-900/90 border border-white/10 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 text-white placeholder-slate-500 text-sm sm:text-base leading-relaxed resize-none transition-all outline-none"
+                className="w-full p-4 rounded-xl bg-[#07090e]/90 border border-white/10 focus:border-[#ff5722] focus:ring-2 focus:ring-[#ff5722]/20 text-white placeholder-zinc-500 text-sm sm:text-base leading-relaxed resize-none transition-all outline-none"
                 autoFocus
               />
             </div>
@@ -125,7 +125,7 @@ export function DiagnosticProbePage({
               <button
                 type="button"
                 onClick={onSkip}
-                className="text-xs text-slate-400 hover:text-slate-200 transition-colors py-2 cursor-pointer font-medium"
+                className="text-xs text-zinc-400 hover:text-zinc-200 transition-colors py-2 cursor-pointer font-medium"
               >
                 Skip / Score Without Answering
               </button>
@@ -135,8 +135,8 @@ export function DiagnosticProbePage({
                 disabled={!isAnswerSufficient}
                 className={`w-full sm:w-auto px-8 py-3.5 rounded-xl font-display text-sm font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
                   isAnswerSufficient
-                    ? 'bg-gradient-to-r from-indigo-600 via-purple-600 to-cyan-500 text-white shadow-lg shadow-indigo-500/30 hover:scale-105 active:scale-95'
-                    : 'bg-slate-800 text-slate-500 cursor-not-allowed border border-white/5'
+                    ? 'bg-gradient-to-r from-[#ff5722] via-[#f97316] to-[#a3e635] text-white shadow-lg shadow-orange-500/30 hover:scale-105 active:scale-95'
+                    : 'bg-[#121624] text-zinc-500 cursor-not-allowed border border-white/5'
                 }`}
               >
                 <span>Synthesize Final Mastery Score</span>
