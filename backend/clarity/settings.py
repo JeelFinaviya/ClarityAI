@@ -44,8 +44,8 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'analysis.middleware.OpenCorsMiddleware',  # Guaranteed universal CORS handler
     'corsheaders.middleware.CorsMiddleware',  # Top of middleware chain for CORS
+    'analysis.middleware.OpenCorsMiddleware',  # Guaranteed fallback CORS handler
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -109,14 +109,30 @@ REST_FRAMEWORK = {
     ],
 }
 
-# CORS Configuration - Fully open for seamless frontend communication
-CORS_ALLOW_ALL_ORIGINS = True
-CORS_ORIGIN_ALLOW_ALL = True
+# CORS Configuration - Strict explicit origin configuration for credentials security
 CORS_ALLOW_CREDENTIALS = True
 CORS_PREFLIGHT_MAX_AGE = 86400
+
+CORS_ALLOWED_ORIGINS = [
+    'https://clarity-ai-jeel12.vercel.app',
+    'http://localhost:5173',
+    'http://127.0.0.1:5173',
+    'http://localhost:5174',
+    'http://127.0.0.1:5174',
+    'http://localhost:3000',
+    'http://127.0.0.1:3000',
+]
+
+cors_env = os.getenv('CORS_ALLOWED_ORIGINS', '')
+if cors_env:
+    for origin in cors_env.split(','):
+        cleaned = origin.strip()
+        if cleaned and cleaned not in CORS_ALLOWED_ORIGINS:
+            CORS_ALLOWED_ORIGINS.append(cleaned)
+
 CORS_ALLOWED_ORIGIN_REGEXES = [
-    r"^https:\/\/.*\.vercel\.app$",
-    r"^https:\/\/.*\.onrender\.com$",
+    r"^https:\/\/[a-zA-Z0-9-]+\.vercel\.app$",
+    r"^https:\/\/[a-zA-Z0-9-]+\.onrender\.com$",
     r"^http:\/\/localhost:[0-9]+$",
     r"^http:\/\/127\.0\.0\.1:[0-9]+$",
 ]
