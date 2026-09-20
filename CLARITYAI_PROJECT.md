@@ -60,7 +60,62 @@ ClarityAI distinguishes between two fundamentally different cognitive states:
 
 ---
 
-## 🚀 How the Idea Evolved
+## 💡 Practical Use Cases
+
+ClarityAI is designed for developers, students, and educators who want to move beyond superficial reading and test real mechanical understanding:
+
+1. **Software Engineering Job Interview Prep:**
+   * Test whether you can explain core CS concepts (e.g., *Event Loop*, *Database Indexing*, *CAP Theorem*) to a Senior Engineer or Tech Lead without defaulting to memorized definitions.
+2. **CS & IT University Students:**
+   * Self-evaluate your understanding before midterms, finals, or technical viva exams across Operating Systems, DBMS, Computer Networks, and Data Structures.
+3. **Developers Learning New Tech Stacks:**
+   * Verify your mental model when picking up new paradigms (e.g., React Fiber Reconciliation, System Design trade-offs, Transformer Attention mechanisms).
+4. **Technical Mentors & Educators:**
+   * Pinpoint the exact missing causal steps or flawed assumptions in a student's explanation.
+
+---
+
+## 📖 How to Use ClarityAI (Step-by-Step Guide)
+
+If you are opening ClarityAI for the first time, follow these simple steps:
+
+```
+  ┌─────────────────┐       ┌─────────────────┐       ┌─────────────────┐
+  │ 1. Pick/Enter   │  ───► │ 2. Articulate   │  ───► │ 3. Set Your     │
+  │    a Topic      │       │    Explanation  │       │    Conviction   │
+  └─────────────────┘       └─────────────────┘       └─────────────────┘
+                                                               │
+                                                               ▼
+  ┌─────────────────┐       ┌─────────────────┐       ┌─────────────────┐
+  │ 6. Master 1100+ │  ◄─── │ 5. Solve Probes │  ◄─── │ 4. Review AI    │
+  │    Lab Questions│       │    & MCQs       │       │    Diagnosis    │
+  └─────────────────┘       └─────────────────┘       └─────────────────┘
+```
+
+### Step 1: Pick a Concept or Enter Your Own
+From the Landing Page, click on any featured sample concept (such as *React Virtual DOM* or *JavaScript Event Loop*), or type any custom technical topic in the **Concept Explorer**.
+
+### Step 2: Articulate Your Explanation in Plain Language
+Write how the mechanism works in your own words.
+* **Tip:** Avoid copying definitions from Wikipedia or documentation. Write out the step-by-step process (*"What happens first? What component handles it? Why does it behave this way?"*).
+
+### Step 3: Rate Your Conviction (Self-Assessed Confidence)
+Use the slider to rate your confidence (0% to 100%). This tests your **epistemic calibration** — whether your confidence matches your actual demonstrated depth.
+
+### Step 4: Review Your AI Cognitive Diagnosis
+ClarityAI evaluates your text against first principles and displays:
+* **Score & Tier:** E.g., *75% - Solid Mechanical Understanding*.
+* **Granular Dimensions:** Core Accuracy, Causal Depth, and Relational Coherence.
+* **Misconceptions & Gaps:** Highlights erroneous claims and essential omitted concepts.
+
+### Step 5: Solve Diagnostic Probes & Adaptive MCQs
+* Click **Start Evaluation** to answer targeted "why/how" probe questions or complete an adaptive 3, 5, or 7-question MCQ assessment.
+* Questions test scenario trade-offs rather than simple definitions.
+
+### Step 6: Practice in the Interview Lab
+Click **Interview Lab** in the top navigation to search and browse 1,100+ curated interview questions across 22 technical domains.
+
+---
 
 ```
   Phase 1: Concept Prototyping
@@ -341,15 +396,53 @@ cd backend
 
 ## 🖼️ Product Screenshots
 
-*(Screenshots can be found in [`docs/screenshots/`](file:///d:/ClarityAI/docs/screenshots/README.md))*
+The application interface exhibits a dark-mode theme with blue and emerald cognitive accents. Place screenshot files in [`docs/screenshots/`](file:///d:/ClarityAI/docs/screenshots/README.md) to render embedded previews:
 
-1. **`01-landing.png`**: Dual Pillar Landing Page (Concept Explorer & Interview Lab).
-2. **`02-analysis.png`**: Articulate Concept Explanation input view.
-3. **`03-analysis-result.png`**: Initial Evaluation, Core Accuracy, Causal Depth, and Calibration Index.
-4. **`04-diagnostic.png`**: Targeted Diagnostic Probe question.
-5. **`05-mcq.png`**: Adaptive Multiple Choice Question assessment.
-6. **`06-final-diagnostic.png`**: Final Synthesized Diagnostic Report & Mastery Journey.
-7. **`08-interview-lab.png`**: Interview Lab with 22 Technical Topics & 1,100+ Questions.
+### 1. Landing Page — Dual Product Pillars
+![Landing Page — Dual Pillars](docs/screenshots/01-landing.png)
+*Showcases the Concept Explorer diagnostic engine and the Interview Lab question bank.*
+
+---
+
+### 2. Concept Articulation & Explanation Input
+![Concept Explanation Input](docs/screenshots/02-analysis.png)
+*Plain-language explanation input editor with real-time word counting and topic selector.*
+
+---
+
+### 3. Epistemic Confidence Calibration
+![Confidence Calibration Slider](docs/screenshots/03-confidence-calibration.png)
+*Interactive confidence rating slider (0–100%) to test for overconfidence and blindspots.*
+
+---
+
+### 4. AI Cognitive Evaluation & Dimensional Scoring
+![Cognitive Evaluation Result](docs/screenshots/04-analysis-result.png)
+*Displays Overall Mastery Score, Core Accuracy (40%), Causal Depth (25%), Relational Coherence (30%), and Confidence Calibration.*
+
+---
+
+### 5. Targeted Diagnostic Probing
+![Targeted Diagnostic Probe](docs/screenshots/05-diagnostic.png)
+*AI-generated single targeted question probing the specific missing causal mechanism.*
+
+---
+
+### 6. Adaptive Scenario MCQ Assessment
+![Adaptive MCQ Assessment](docs/screenshots/06-mcq.png)
+*Multi-choice question evaluation probing scenario trade-offs and component interactions.*
+
+---
+
+### 7. Final Synthesized Diagnostic Report & Diagnostic Journey
+![Final Synthesized Diagnostic Report](docs/screenshots/07-final-diagnostic.png)
+*Final calibrated mastery verdict with the complete 4-part diagnostic journey narrative.*
+
+---
+
+### 8. Interview Lab — 1,100+ Questions Across 22 Topics
+![Interview Lab](docs/screenshots/08-interview-lab.png)
+*Searchable technical question bank with 50 questions per domain across 22 CS & IT areas.*
 
 ---
 
