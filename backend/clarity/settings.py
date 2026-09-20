@@ -24,8 +24,9 @@ if allowed_hosts_env == '*':
     ALLOWED_HOSTS = ['*']
 else:
     ALLOWED_HOSTS = [h.strip() for h in allowed_hosts_env.split(',') if h.strip()]
-    if '.onrender.com' not in ALLOWED_HOSTS and '*' not in ALLOWED_HOSTS:
-        ALLOWED_HOSTS.append('.onrender.com')
+    for host in ['*', '.onrender.com', 'clarityai-dg6m.onrender.com']:
+        if host not in ALLOWED_HOSTS:
+            ALLOWED_HOSTS.append(host)
 
 
 # Application definition
@@ -44,8 +45,8 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',  # Top of middleware chain for CORS
-    'analysis.middleware.OpenCorsMiddleware',  # Guaranteed fallback CORS handler
+    'analysis.middleware.OpenCorsMiddleware',  # Guaranteed fallback CORS handler at top
+    'corsheaders.middleware.CorsMiddleware',  # Standard CORS middleware
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -109,7 +110,8 @@ REST_FRAMEWORK = {
     ],
 }
 
-# CORS Configuration - Strict explicit origin configuration for credentials security
+# CORS Configuration
+CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
 CORS_PREFLIGHT_MAX_AGE = 86400
 
@@ -131,8 +133,8 @@ if cors_env:
             CORS_ALLOWED_ORIGINS.append(cleaned)
 
 CORS_ALLOWED_ORIGIN_REGEXES = [
-    r"^https:\/\/[a-zA-Z0-9-]+\.vercel\.app$",
-    r"^https:\/\/[a-zA-Z0-9-]+\.onrender\.com$",
+    r"^https:\/\/.*\.vercel\.app$",
+    r"^https:\/\/.*\.onrender\.com$",
     r"^http:\/\/localhost:[0-9]+$",
     r"^http:\/\/127\.0\.0\.1:[0-9]+$",
 ]
@@ -168,9 +170,7 @@ CSRF_TRUSTED_ORIGINS = [
     'http://127.0.0.1:3000',
 ]
 
-
-
 # Google Gemini API Configuration
 GEMINI_API_KEY = os.getenv('GEMINI_API_KEY', '')
-GEMINI_MODEL = os.getenv('GEMINI_MODEL', 'gemini-3.6-flash')
+GEMINI_MODEL = os.getenv('GEMINI_MODEL', 'gemini-2.5-flash')
 
